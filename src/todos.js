@@ -1,4 +1,4 @@
-const { title } = require("process");
+const todosList = [];
 
 const todos = (title, description) => {
   const proto = {
@@ -11,4 +11,4 @@ const todos = (title, description) => {
   return Object.assign(proto, { description });
 };
 
-export { todos };
+export { todosList, todos };
