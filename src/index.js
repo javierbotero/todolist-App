@@ -1,4 +1,6 @@
-import { todos } from './todos';
+import { todosList, todos } from './todos';
 
 const myTodo = todos('Clean', 'Clean the house');
-console.log(myTodo.getTitle());
+const watchGrimm = todos('Movies', 'Watch the Grimm');
+todosList.push(watchGrimm);
+console.log(todosList);

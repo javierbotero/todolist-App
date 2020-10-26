@@ -1,6 +1,7 @@
 const todosList = [];
+const projects = ['Start a Project'];
 
-const todos = (title, description) => {
+const todos = (title, description, indexProject) => {
   const proto = {
     setTitle(text) {
       title = text;
