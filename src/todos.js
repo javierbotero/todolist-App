@@ -3,13 +3,13 @@ const projects = ['Start a Project'];
 
 const todos = (title, description, indexProject) => {
   const proto = {
-    setTitle(text) {
-      title = text;
+    setIndexProject(index) {
+      indexProject = index;
     },
-    getTitle() { return title; },
+    getIndexProject() { return indexProject; },
   };
 
-  return Object.assign(proto, { description });
+  return Object.assign(proto, { title, description });
 };
 
-export { todosList, todos };
+export { todosList, todos, projects };
