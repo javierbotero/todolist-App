@@ -9,7 +9,7 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin()],
   devtool: 'inline-source-map',
-  modules: {
+  module: {
     rules: [
       {
         test: /\.m?js$/,
@@ -17,7 +17,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: ['@babel/preset-env'],
           },
         },
       },
