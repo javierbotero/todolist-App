@@ -31,4 +31,4 @@ const todos = (title, description, indexProject) => {
   return Object.assign(proto, { title, description, isComplete });
 };
 
-export {projectsList, projects, todos };
+export { projectsList, projects, todos };
