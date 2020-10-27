@@ -1,6 +1,6 @@
 import { logic } from './logic';
+import { queries } from './domQueries';
 
 const project = logic.createProject('Default Project');
 logic.addToProjectsList(project);
-logic.createTodo('Title', 'Some description', 0);
-console.log(logic.markTodoAsCompleted(project, 0));
+console.log(queries.displayFormTodo());
