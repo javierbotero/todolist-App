@@ -8,16 +8,19 @@ const logic = (() => {
   };
   const addToProjectsList = (project) => projectsList.push(project);
   const fetchProjects = () => projectsList;
-  const addTodoToProject = (todo) => { todosList.push(todo); };
-  const fecthTodoList = () => todosList;
-  const editTodo = (indexTodoList, [title, description, indexProject]) => {
-    todosList[indexTodoList].title = title;
-    todosList[indexTodoList].description = description;
-    todosList[indexTodoList].setIndexProject(indexProject);
+  const addTodoToProject = (todo, project) => { project.addTodoToTodos(todo); };
+  const fecthTodoList = (project) => project.getTodos();
+  const editTodo = (project, index, [title, description, indexProject]) => {
+    const todosList = fecthTodoList(project);
+    todosList[index].title = title;
+    todosList[index].description = description;
+    todosList[index].setIndexProject(indexProject);
   };
   const deleteProject = (index) => { return projectsList.splice(index, 1); };
-  const markTodoAsCompleted = () => {};
-  const changeTodoProject = () => {};
+  const markTodoAsCompleted = (project, index) => {
+    const list = fecthTodoList(project);
+    return list[index].isComplete = !list[index].isComplete;
+  };
 
   return {
     createProject,
@@ -27,6 +30,7 @@ const logic = (() => {
     addTodoToProject,
     fecthTodoList,
     editTodo,
+    markTodoAsCompleted,
     deleteProject,
   };
 })();

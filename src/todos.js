@@ -20,6 +20,7 @@ const projects = (title) => {
 };
 
 const todos = (title, description, indexProject) => {
+  const isComplete = false;
   const proto = {
     setIndexProject(index) {
       indexProject = index;
@@ -27,7 +28,7 @@ const todos = (title, description, indexProject) => {
     getIndexProject() { return indexProject; },
   };
 
-  return Object.assign(proto, { title, description });
+  return Object.assign(proto, { title, description, isComplete });
 };
 
 export {projectsList, projects, todos };
