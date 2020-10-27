@@ -1,31 +1,33 @@
-import { todosList, projects, todos } from './todos';
+import { projectsList, projects, todos } from './todos';
 
 const logic = (() => {
+  const createProject = (title) => { return projects(title); };
   const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0) => {
-    return todos(title, description, indexProject);
+    const todo = todos(title, description, indexProject);
+    projectsList[indexProject].addTodoToTodos(todo);
   };
-  const addTodoToArrayList = (todo) => { todosList.push(todo); };
+  const addToProjectsList = (project) => projectsList.push(project);
+  const fetchProjects = () => projectsList;
+  const addTodoToProject = (todo) => { todosList.push(todo); };
   const fecthTodoList = () => todosList;
   const editTodo = (indexTodoList, [title, description, indexProject]) => {
     todosList[indexTodoList].title = title;
     todosList[indexTodoList].description = description;
     todosList[indexTodoList].setIndexProject(indexProject);
   };
-  const deleteTodo = (index) => {
-    todosList.splice(index, 1);
-  };
-  const createProject = (name) => {
-    projects.push(name);
-  };
-  const deleteProject = () => {};
+  const deleteProject = (index) => { return projectsList.splice(index, 1); };
   const markTodoAsCompleted = () => {};
   const changeTodoProject = () => {};
 
   return {
+    createProject,
     createTodo,
-    addTodoToArrayList,
+    addToProjectsList,
+    fetchProjects,
+    addTodoToProject,
     fecthTodoList,
     editTodo,
+    deleteProject,
   };
 })();
 

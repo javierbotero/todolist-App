@@ -1,13 +1,22 @@
-const todosList = [];
+const projectsList = [];
+
 const projects = (title) => {
   const todos = [];
   const proto = {
     getTodos() {
       return todos;
     },
+
+    deleteTodoFromTodos(index) {
+      todos.splice(index, 1);
+    },
+
+    addTodoToTodos(todo) {
+      todos.push(todo);
+    },
   };
 
-  return Object.assign(proto, { title, todos });
+  return Object.assign(proto, { title });
 };
 
 const todos = (title, description, indexProject) => {
@@ -21,4 +30,4 @@ const todos = (title, description, indexProject) => {
   return Object.assign(proto, { title, description });
 };
 
-export { todosList, todos, projects };
+export {projectsList, projects, todos };

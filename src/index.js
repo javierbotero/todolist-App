@@ -1,5 +1,8 @@
-import { todosList, todos } from './todos';
+import { logic } from './logic';
 
-const myTodo = todos('Clean', 'Clean the house');
-const watchGrimm = todos('Movies', 'Watch the Grimm');
-todosList.push(watchGrimm);
+const project = logic.createProject('Default Project');
+logic.addToProjectsList(project);
+console.log(logic.fetchProjects()[0].title);
+logic.createTodo('Title', 'Some description', 0);
+const spliceresult = logic.deleteProject(0);
+console.log(spliceresult);
