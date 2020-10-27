@@ -1,7 +1,5 @@
-import { logic } from './logic';
+import { todosList, todos } from './todos';
 
-const myTodo = logic.createTodo();
-logic.addTodoToArrayList(myTodo);
-console.log(logic.fecthTodoList());
-logic.editTodo(0, ['Cleaning the House', 'Wednesday in the morning clean the house', 0]);
-console.log(logic.fecthTodoList());
+const myTodo = todos('Clean', 'Clean the house');
+const watchGrimm = todos('Movies', 'Watch the Grimm');
+todosList.push(watchGrimm);

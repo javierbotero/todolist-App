@@ -5,14 +5,18 @@ const logic = (() => {
     return todos(title, description, indexProject);
   };
   const addTodoToArrayList = (todo) => { todosList.push(todo); };
-  const fecthTodoList = () => { return todosList; };
+  const fecthTodoList = () => todosList;
   const editTodo = (indexTodoList, [title, description, indexProject]) => {
     todosList[indexTodoList].title = title;
     todosList[indexTodoList].description = description;
     todosList[indexTodoList].setIndexProject(indexProject);
   };
-  const deleteTodo = () => {};
-  const createProject = () => {};
+  const deleteTodo = (index) => {
+    todosList.splice(index, 1);
+  };
+  const createProject = (name) => {
+    projects.push(name);
+  };
   const deleteProject = () => {};
   const markTodoAsCompleted = () => {};
   const changeTodoProject = () => {};

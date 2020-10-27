@@ -1,5 +1,14 @@
 const todosList = [];
-const projects = ['Start a Project'];
+const projects = (title) => {
+  const todos = [];
+  const proto = {
+    getTodos() {
+      return todos;
+    },
+  };
+
+  return Object.assign(proto, { title, todos });
+};
 
 const todos = (title, description, indexProject) => {
   const proto = {
