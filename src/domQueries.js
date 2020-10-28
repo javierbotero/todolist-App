@@ -26,7 +26,7 @@ const todoObject = () => {
   const title = getTodoTitle();
   const description = getTodoDescription();
   const selectProject = getTodoProject();
-  return logic.createTodo(title, description, selectProject);
+  logic.createTodo(title, description, selectProject);
 };
 
 const addTodoToArr = () => {

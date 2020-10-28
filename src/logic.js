@@ -5,6 +5,7 @@ const logic = (() => {
   const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0) => {
     const todo = todos(title, description, indexProject);
     projectsList[indexProject].addTodoToTodos(todo);
+    localStorage.setItem('projects', projectsList);
   };
   const addToProjectsList = (project) => projectsList.push(project);
   const fetchProjects = () => projectsList;
@@ -21,6 +22,7 @@ const logic = (() => {
     const list = fecthTodoList(project);
     return list[index].isComplete = !list[index].isComplete;
   };
+  const addlocStorageToProjects = (array) => { projectsList = array; };
 
   return {
     createProject,
@@ -32,6 +34,7 @@ const logic = (() => {
     editTodo,
     markTodoAsCompleted,
     deleteProject,
+    addlocStorageToProjects,
   };
 })();
 
