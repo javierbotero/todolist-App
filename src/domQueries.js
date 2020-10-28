@@ -5,6 +5,9 @@ const formTodo = () => document.getElementById('form');
 const getTodoBtn = () => document.querySelector('.add-btn');
 const getCloseBtn = () => document.querySelector('.ex-btn');
 const getTodoSubmit = () => document.querySelector('.submit-todo');
+const getTodoTitle = () => document.querySelector('#title').value;
+const getTodoDescription = () => document.querySelector('#description').value;
+const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
 
 const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
 const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
@@ -16,6 +19,21 @@ const addBtnTodoEventDisplay = () => {
 const addCloseTodo = () => {
   getCloseBtn().onclick = hideFormTodo;
   getTodoSubmit().onclick = hideFormTodo;
+  addTodoToArr();
+};
+
+const todoObject = () => {
+  const title = getTodoTitle();
+  const description = getTodoDescription();
+  const selectProject = getTodoProject();
+  return logic.createTodo(title, description, selectProject);
+};
+
+const addTodoToArr = () => {
+  getTodoSubmit().addEventListener('click', (e) => {
+    e.preventDefault();
+    todoObject();
+  });
 };
 
 const queries = (() => {
@@ -61,12 +79,6 @@ const queries = (() => {
     addBtnTodoEventDisplay();
     addCloseTodo();
   };
-
-  // const hideForm = (evt) => {
-  //   if (evt.target.className === 'ex-btn' || evt.target.className === 'submit-todo') {
-  //     evt.target.onclick = hideFormTodo();
-  //   }
-  // };
 
   return {
     displaySetup,
