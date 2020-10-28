@@ -4,8 +4,10 @@ const logic = (() => {
   const createProject = (title) => { return projects(title); };
   const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0) => {
     const todo = todos(title, description, indexProject);
+    console.log(typeof projectsList[indexProject], 'the project');
     projectsList[indexProject].addTodoToTodos(todo);
-    localStorage.setItem('projects', projectsList);
+    localStorage.setItem('projects', JSON.stringify(projectsList));
+    console.log(localStorage.getItem('projects')[0].getTodos());
   };
   const addToProjectsList = (project) => projectsList.push(project);
   const fetchProjects = () => projectsList;

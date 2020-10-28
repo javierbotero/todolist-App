@@ -13,6 +13,7 @@ const projects = (title) => {
 
     addTodoToTodos(todo) {
       todos.push(todo);
+      console.log(todos);
     },
   };
 
