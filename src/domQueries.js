@@ -34,4 +34,4 @@ const queries = (() => {
   }
 })();
 
-export { queries }
+export default queries;
