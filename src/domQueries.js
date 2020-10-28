@@ -1,9 +1,22 @@
 import { logic } from './logic';
+
 const { body } = document;
 const formTodo = () => document.getElementById('form');
 const getTodoBtn = () => document.querySelector('.add-btn');
 const getCloseBtn = () => document.querySelector('.ex-btn');
 const getTodoSubmit = () => document.querySelector('.submit-todo');
+
+const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
+const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
+
+const addBtnTodoEventDisplay = () => {
+  getTodoBtn().onclick = showFormTodo;
+};
+
+const addCloseTodo = () => {
+  getCloseBtn().onclick = hideFormTodo;
+  getTodoSubmit().onclick = hideFormTodo;
+};
 
 const queries = (() => {
   const displaySetup = () => {
@@ -28,33 +41,32 @@ const queries = (() => {
 
   const displayFormTodo = () => {
     const html = `
-      <div class='ex-btn'><span>X</span></div>
-      <form id="form" class="show-form-todo">
-        <label for="title">Title</lable><br>
-        <input type="text" id="title">
-        <label for="description">Description</lable><br>
-        <input type="text" id="description">
-        <label for="projects-select">Select the project</label>
-        <select id="projects-select">
-          ${displaySelect()}
-        </select>
-        <input class="submit-todo" type="submit" value="Submit">
-      </form>
+      <div class="hide-form-todo" id="form">
+        <div class='ex-btn'><span>X</span></div>
+        <form>
+          <label for="title">Title</lable><br>
+          <input type="text" id="title">
+          <label for="description">Description</lable><br>
+          <input type="text" id="description">
+          <label for="projects-select">Select the project</label>
+          <select id="projects-select">
+            ${displaySelect()}
+          </select>
+          <input class="submit-todo" type="submit" value="Submit">
+        </form>
+      </div>
     `;
 
     body.innerHTML += html;
+    addBtnTodoEventDisplay();
+    addCloseTodo();
   };
 
-  const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
-  const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
-
-  getTodoBtn().addEventListener('click', showFormTodo());
-
-  const hideForm = (evt) => {
-    if (evt.target.className === 'ex-btn' || evt.target.className === 'submit-todo') {
-      evt.target.onclick = hideFormTodo();
-    }
-  };
+  // const hideForm = (evt) => {
+  //   if (evt.target.className === 'ex-btn' || evt.target.className === 'submit-todo') {
+  //     evt.target.onclick = hideFormTodo();
+  //   }
+  // };
 
   return {
     displaySetup,
