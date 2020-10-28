@@ -1,12 +1,25 @@
-import { fetchProjects, logic } from './logic';
+import { logic } from './logic';
+const { body } = document;
+const formTodo = () => document.getElementById('form');
+const getTodoBtn = () => document.querySelector('.add-btn');
+const getCloseBtn = () => document.querySelector('.ex-btn');
+const getTodoSubmit = () => document.querySelector('.submit-todo');
 
 const queries = (() => {
-  const body = document.body;
+  const displaySetup = () => {
+    body.innerHTML = `
+    <div id="container">
+    <div id="edit">
+    <h3>Edit</h3>
+    <button class="add-btn">Add Todo</button>
+    </div>
+    <div id="projects">PROJECTS</div>
+    </div>
+    `;
+  };
 
   const displaySelect = () => {
     let html = '';
-    const select = document.createElement('select');
-    select.setAttribute('id', 'projects-select');
     logic.fetchProjects().forEach((project) => {
       html += `<option value="${project.title}">${project.title}</option>`;
     });
@@ -15,23 +28,39 @@ const queries = (() => {
 
   const displayFormTodo = () => {
     const html = `
-      <form id="form">
+      <div class='ex-btn'><span>X</span></div>
+      <form id="form" class="show-form-todo">
         <label for="title">Title</lable><br>
         <input type="text" id="title">
         <label for="description">Description</lable><br>
         <input type="text" id="description">
         <label for="projects-select">Select the project</label>
-        ${displaySelect()}
-        <input type="submit" value="Submit">
+        <select id="projects-select">
+          ${displaySelect()}
+        </select>
+        <input class="submit-todo" type="submit" value="Submit">
       </form>
     `;
 
-    return html;
+    body.innerHTML += html;
+  };
+
+  const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
+  const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
+
+  getTodoBtn().addEventListener('click', showFormTodo());
+
+  const hideForm = (evt) => {
+    if (evt.target.className === 'ex-btn' || evt.target.className === 'submit-todo') {
+      evt.target.onclick = hideFormTodo();
+    }
   };
 
   return {
+    displaySetup,
     displayFormTodo,
-  }
+    getTodoBtn,
+  };
 })();
 
 export default queries;
