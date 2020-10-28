@@ -6,8 +6,7 @@ const logic = (() => {
     const todo = todos(title, description, indexProject);
     console.log(typeof projectsList[indexProject], 'the project');
     projectsList[indexProject].addTodoToTodos(todo);
-    localStorage.setItem('projects', JSON.stringify(projectsList));
-    console.log(localStorage.getItem('projects')[0].getTodos());
+    // localStorage.setItem('projects', JSON.stringify(projectsList));
   };
   const addToProjectsList = (project) => projectsList.push(project);
   const fetchProjects = () => projectsList;
@@ -24,7 +23,22 @@ const logic = (() => {
     const list = fecthTodoList(project);
     return list[index].isComplete = !list[index].isComplete;
   };
-  const addlocStorageToProjects = (array) => { projectsList = array; };
+  const addToLocalStroage = () => {
+    const projectsArray = fetchProjects();
+    console.log(projectsArray);
+    if (!localStorage.projects) {
+      localStorage.setItem('projects', JSON.stringify(projectsArray));
+    }
+    return localStorage;
+  };
+  const getObjFromLocStorage = () => {
+    const obj = localStorage.getItem('projects');
+    const arr = [];
+    if (localStorage.projects) {
+      Object.assign(arr, JSON.parse(obj));
+    }
+    return arr;
+  };
 
   return {
     createProject,
@@ -36,7 +50,8 @@ const logic = (() => {
     editTodo,
     markTodoAsCompleted,
     deleteProject,
-    addlocStorageToProjects,
+    addToLocalStroage,
+    getObjFromLocStorage,
   };
 })();
 
