@@ -6,7 +6,7 @@ const logic = (() => {
     const todo = todos(title, description, indexProject);
     console.log(typeof projectsList[indexProject], 'the project');
     projectsList[indexProject].addTodoToTodos(todo);
-    // localStorage.setItem('projects', JSON.stringify(projectsList));
+    addToLocalStorage();
   };
   const addToProjectsList = (project) => projectsList.push(project);
   const fetchProjects = () => projectsList;
@@ -23,21 +23,16 @@ const logic = (() => {
     const list = fecthTodoList(project);
     return list[index].isComplete = !list[index].isComplete;
   };
-  const addToLocalStroage = () => {
+  const addToLocalStorage = () => {
     const projectsArray = fetchProjects();
-    console.log(projectsArray);
-    if (!localStorage.projects) {
-      localStorage.setItem('projects', JSON.stringify(projectsArray));
-    }
-    return localStorage;
+    localStorage.setItem('projects', JSON.stringify(projectsArray));
   };
-  const getObjFromLocStorage = () => {
-    const obj = localStorage.getItem('projects');
-    const arr = [];
-    if (localStorage.projects) {
-      Object.assign(arr, JSON.parse(obj));
-    }
-    return arr;
+  const getObjFromLocStorage = () => JSON.parse(localStorage.getItem('projects'));
+  const setProjectsFromLocalStorage = () => {
+    const projectsFromLocalStorage = getObjFromLocStorage();
+    projectsFromLocalStorage.forEach((project) => {
+      projectsList.push(Object.assign(project, projects()));
+    });
   };
 
   return {
@@ -50,8 +45,9 @@ const logic = (() => {
     editTodo,
     markTodoAsCompleted,
     deleteProject,
-    addToLocalStroage,
+    addToLocalStorage,
     getObjFromLocStorage,
+    setProjectsFromLocalStorage,
   };
 })();
 

@@ -2,12 +2,12 @@ import { logic } from './logic';
 import queries from './domQueries';
 import './assets/style.css';
 
-// if (localStorage.getItem('projects')) {
-//   console.log(JSON.parse(localStorage.getItem('projects'))[0].getTodos());
-//   logic.addlocStorageToProjects(JSON.parse(localStorage.getItem('projects')));
-// } else {
-//   localStorage.setItem('projects', JSON.stringify(logic.fetchProjects()));
-// }
+console.log(localStorage.projects);
+if (!localStorage.projects) {
+  logic.addToLocalStorage();
+} else {
+  logic.setProjectsFromLocalStorage();
+}
 
 // console.log(localStorage.getItem('projects'));
 const project = logic.createProject('Default Project');
@@ -15,5 +15,4 @@ const project = logic.createProject('Default Project');
 logic.addToProjectsList(project);
 queries.displaySetup();
 queries.displayFormTodo();
-console.log(logic.addToLocalStroage());
 console.log(logic.getObjFromLocStorage());
