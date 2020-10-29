@@ -1,4 +1,5 @@
 import { logic } from './logic';
+import { projectsList } from './todos';
 
 const { body } = document;
 const formTodo = () => document.getElementById('form');
@@ -51,7 +52,9 @@ const queries = (() => {
 
   const displaySelect = () => {
     let html = '';
-    logic.fetchProjects().forEach((project) => {
+    console.log(projectsList);
+    projectsList.forEach((project) => {
+      console.log(project);
       html += `<option value="${project.title}">${project.title}</option>`;
     });
     return html;

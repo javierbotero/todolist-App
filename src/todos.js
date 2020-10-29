@@ -1,35 +1,37 @@
 const projectsList = [];
 
-const projects = (title) => {
-  const todos = [];
+const behaviorsProject = (proto) => ({
+  getTodos: () => proto.todos,
+
+  addTodoToTodos: (todo) => {
+    proto.todos.push(todo);
+    console.log(proto.todos);
+  },
+  deleteTodoFromTodos: (indexTodo) => { proto.todos.splice(indexTodo, 1) },
+});
+
+const projects = (title, todos = []) => {
   const proto = {
-    getTodos() {
-      return todos;
-    },
-
-    deleteTodoFromTodos(index) {
-      todos.splice(index, 1);
-    },
-
-    addTodoToTodos(todo) {
-      todos.push(todo);
-      console.log(todos);
-    },
-  };
-
-  return Object.assign(proto, { title });
+    todos,
+    title,
+  }
+  return Object.assign(proto, behaviorsProject(proto));
 };
+
+const behaviorsTodo = (proto) => ({
+  setIndexProject: (index) => {
+    proto.indexProject = index;
+  },
+  getIndexProject: () => { return proto.indexProject; },
+});
 
 const todos = (title, description, indexProject) => {
-  const isComplete = false;
   const proto = {
-    setIndexProject(index) {
-      indexProject = index;
-    },
-    getIndexProject() { return indexProject; },
+    title,
+    description,
+    indexProject,
   };
-
-  return Object.assign(proto, { title, description, isComplete });
+  return Object.assign(proto, behaviorsTodo(proto));
 };
 
-export { projectsList, projects, todos };
+export { projectsList, behaviorsProject, projects, todos };
