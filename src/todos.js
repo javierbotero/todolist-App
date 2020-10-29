@@ -13,7 +13,7 @@ const projects = (title) => {
 
     addTodoToTodos(todo) {
       todos.push(todo);
-      console.log(todos);
+      // console.log(todos);
     },
   };
 

@@ -1,10 +1,9 @@
 import { projectsList, projects, todos } from './todos';
 
 const logic = (() => {
-  const createProject = (title) => { return projects(title); };
+  const createProject = (title) => projects(title);
   const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0) => {
     const todo = todos(title, description, indexProject);
-    console.log(typeof projectsList[indexProject], 'the project');
     projectsList[indexProject].addTodoToTodos(todo);
     addToLocalStorage();
   };
@@ -18,7 +17,7 @@ const logic = (() => {
     todosList[index].description = description;
     todosList[index].setIndexProject(indexProject);
   };
-  const deleteProject = (index) => { return projectsList.splice(index, 1); };
+  const deleteProject = (index) => projectsList.splice(index, 1);
   const markTodoAsCompleted = (project, index) => {
     const list = fecthTodoList(project);
     return list[index].isComplete = !list[index].isComplete;
