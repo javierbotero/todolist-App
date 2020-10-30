@@ -9,4 +9,4 @@ queries.displayFormTodo();
 logic.setProjectsFromLocalStorage();
 // console.log(logic.setProjectsFromLocalStorage());
 // console.log(logic.getObjFromLocStorage());
-console.log(logic.fetchProjects());
+// console.log(logic.fetchProjects());

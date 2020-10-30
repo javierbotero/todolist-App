@@ -23,22 +23,6 @@ const logic = (() => {
     list[index].isComplete = !list[index].isComplete;
     return list[index].isComplete;
   };
-  const addToLocalStorage = () => {
-    const projectsArray = projectsList;
-    const projectsInLocStorage = getObjFromLocStorage();
-    const todosArr = [];
-    projectsArray.forEach((project, i) => {
-      const title = project.title;
-      const todo = project.todos;
-      if (projectsInLocStorage.length === 0) {
-        localStorage.setItem(`${title}`, JSON.stringify(todo));
-      } else {
-        todosArr.push(...projectsInLocStorage[i].todos);
-        todosArr.push(...todo);
-        localStorage.setItem(`${title}`, JSON.stringify(todosArr));
-      }
-    });
-  };
   const getObjFromLocStorage = () => {
     const keys = Object.keys(localStorage);
     const projectsArr = [];
@@ -49,7 +33,6 @@ const logic = (() => {
         project.todos = [];
         const todosArr = JSON.parse(localStorage.getItem(el));
         project.todos = todosArr.map(el => Object.assign(todos('e', 'e', i), el));
-        console.log(project.todos);
         projectsArr.push(project);
       }
     });
@@ -57,10 +40,30 @@ const logic = (() => {
   };
   const setProjectsFromLocalStorage = () => {
     const projectsArr = getObjFromLocStorage();
+    const newProjectList = [];
     projectsArr.forEach(project => {
-      projectsList.map(el => Object.assign(el, project));
+      projectsList.forEach(el => newProjectList.push(Object.assign(el, project)));
     });
-    return projectsList;
+    return newProjectList;
+  };
+  const addToLocalStorage = () => {
+    const projectsArray = projectsList;
+    console.log(projectsArray);
+    const projectsInLocStorage = getObjFromLocStorage();
+    console.log(projectsInLocStorage);
+    // projectsInLocStorage.push(projectsArray[0]);
+    const todosArr = [];
+    projectsArray.forEach((project, i) => {
+      const key = project.title;
+      const todo = project.todos;
+      if (projectsInLocStorage.length === 0) {
+        localStorage.setItem(`${key}`, JSON.stringify(todo));
+      } else {
+        todosArr.push(...projectsInLocStorage[i].todos);
+        todosArr.push(...todo);
+        localStorage.setItem(`${key}`, JSON.stringify(todosArr));
+      }
+    });
   };
 
   return {
