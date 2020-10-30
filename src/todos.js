@@ -5,7 +5,6 @@ const behaviorsProject = (proto) => ({
 
   addTodoToTodos: (todo) => {
     proto.todos.push(todo);
-    console.log(proto.todos);
   },
   deleteTodoFromTodos: (indexTodo) => { proto.todos.splice(indexTodo, 1); },
   changeTodo: (index, newTodo) => {
@@ -28,11 +27,12 @@ const behaviorsTodo = (proto) => ({
   getIndexProject: () => proto.indexProject,
 });
 
-const todos = (title, description, indexProject) => {
+const todos = (title, description, indexProject, isComplete) => {
   const proto = {
     title,
     description,
     indexProject,
+    isComplete,
   };
   return Object.assign(proto, behaviorsTodo(proto));
 };

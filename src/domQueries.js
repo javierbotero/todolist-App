@@ -52,9 +52,7 @@ const queries = (() => {
 
   const displaySelect = () => {
     let html = '';
-    console.log(projectsList);
     projectsList.forEach((project) => {
-      console.log(project);
       html += `<option value="${project.title}">${project.title}</option>`;
     });
     return html;
