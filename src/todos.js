@@ -13,11 +13,10 @@ const projects = (title) => {
 
     addTodoToTodos(todo) {
       todos.push(todo);
-      // console.log(todos);
     },
   };
 
-  return Object.assign(proto, { title });
+  return Object.assign(proto, { title, todos });
 };
 
 const todos = (title, description, indexProject) => {
