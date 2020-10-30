@@ -24,23 +24,16 @@ const logic = (() => {
     return list[index].isComplete;
   };
   const addToLocalStorage = () => {
-    const keys = Object.keys(localStorage);
-    const localArr = fetchProjects();
-    const projectsArray = setProjectsFromLocalStorage();
-    console.log(projectsArray);
-    localArr.forEach((project, i) => {
-      const storageTodo = projectsArray[i].todos;
-      // console.log(storageTodo);
-      const { title } = project;
-      const todos = project.getTodos();
-      if (title === keys[i]) {
-        const todo = JSON.parse(JSON.stringify(...todos));
-        // console.log(todo);
-        // storageTodo.push(todo);
-        localStorage.setItem(`${title}`, JSON.stringify(storageTodo));
-      } else {
-        localStorage.setItem(`${title}`, JSON.stringify(todos));
-      }
+    const projectsArray = fetchProjects();
+    const projectsInLoc = getObjFromLocStorage();
+    console.log(projectsInLoc);
+    const todosArr = [];
+    projectsArray.forEach((project, i) => {
+      const { title, todos } = (project);
+      todosArr.push(...projectsInLoc[i].todos);
+      todosArr.push(...todos);
+      console.log(todosArr);
+      localStorage.setItem(`${title}`, JSON.stringify(todosArr));
     });
   };
   const getObjFromLocStorage = () => {
