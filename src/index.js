@@ -11,5 +11,3 @@ if (localStorage.projects) {
 logic.createFirstProject();
 queries.displaySetup();
 queries.displayFormTodo();
-logic.switchTodoCompleted(0, 0);
-console.log(logic.projectsList[0].getTodos()[0]);
