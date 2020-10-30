@@ -1,4 +1,4 @@
-import { projectsList, behaviorsProject, projects, todos } from './todos';
+import { projectsList, behaviorsProject, projects, behaviorsTodo, todos } from './todos';
 
 const logic = (() => {
   const createProject = (title) => { return projects(title); };
@@ -7,7 +7,7 @@ const logic = (() => {
   };
   const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0) => {
     const todo = todos(title, description, indexProject);
-    console.log(projectsList[indexProject], 'the project');
+    console.log(todo);
     projectsList[indexProject].addTodoToTodos(todo);
     addToLocalStorage();
   };
@@ -17,31 +17,36 @@ const logic = (() => {
     addToLocalStorage();
   };
   const setProjectsFromLocalStorage = () => {
-    console.log('projectsList before getting from localStorage', projectsList);
     getObjFromLocStorage().forEach((project) => {
       projectsList.push(Object.assign(project, behaviorsProject(project)));
     });
-    console.log('Todos from default:', projectsList[0].getTodos());
   };
   const createFirstProject = () => {
     if (projectsList.length === 0) {
       const project = createProject('Default Project');
       addToProjectsList(project);
-      addToLocalStorage();
       setProjectsFromLocalStorage();
     }
   };
-  const addTodoToProject = (todo, project) => { project.addTodoToTodos(todo); };
-  const fecthTodoList = (project) => project.getTodos();
+  const addTodoToProject = (todo, project) => {
+    project.addTodoToTodos(todo);
+    addToLocalStorage();
+  };
+  const fetchTodoList = (index) => {
+    projectsList[index].getTodos().forEach((todo, indexForEach) => {
+      projectsList[index].changeTodo(indexForEach, Object.assign(todo, behaviorsTodo(todo)));
+    });
+    return projectsList[index].getTodos();
+  };
   const editTodo = (project, index, [title, description, indexProject]) => {
-    const todosList = fecthTodoList(project);
+    const todosList = fetchTodoList(project);
     todosList[index].title = title;
     todosList[index].description = description;
     todosList[index].setIndexProject(indexProject);
   };
   const deleteProject = (index) => { return projectsList.splice(index, 1); };
   const markTodoAsCompleted = (project, index) => {
-    const list = fecthTodoList(project);
+    const list = fetchTodoList(project);
     return list[index].isComplete = !list[index].isComplete;
   };
 
@@ -51,7 +56,7 @@ const logic = (() => {
     addToProjectsList,
     createFirstProject,
     addTodoToProject,
-    fecthTodoList,
+    fetchTodoList,
     editTodo,
     markTodoAsCompleted,
     deleteProject,

@@ -11,7 +11,7 @@ if (localStorage.projects) {
 }
 
 logic.createFirstProject();
-
 queries.displaySetup();
 queries.displayFormTodo();
+console.log(logic.fetchTodoList(0));
 console.log(logic.getObjFromLocStorage());

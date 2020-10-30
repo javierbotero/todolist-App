@@ -7,14 +7,17 @@ const behaviorsProject = (proto) => ({
     proto.todos.push(todo);
     console.log(proto.todos);
   },
-  deleteTodoFromTodos: (indexTodo) => { proto.todos.splice(indexTodo, 1) },
+  deleteTodoFromTodos: (indexTodo) => { proto.todos.splice(indexTodo, 1); },
+  changeTodo: (index, newTodo) => {
+    proto.todos[index] = newTodo;
+  },
 });
 
 const projects = (title, todos = []) => {
   const proto = {
     todos,
     title,
-  }
+  };
   return Object.assign(proto, behaviorsProject(proto));
 };
 
@@ -22,7 +25,7 @@ const behaviorsTodo = (proto) => ({
   setIndexProject: (index) => {
     proto.indexProject = index;
   },
-  getIndexProject: () => { return proto.indexProject; },
+  getIndexProject: () => proto.indexProject,
 });
 
 const todos = (title, description, indexProject) => {
@@ -34,4 +37,4 @@ const todos = (title, description, indexProject) => {
   return Object.assign(proto, behaviorsTodo(proto));
 };
 
-export { projectsList, behaviorsProject, projects, todos };
+export { projectsList, behaviorsProject, projects, behaviorsTodo, todos };
