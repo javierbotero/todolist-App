@@ -1,3 +1,4 @@
+import { get } from 'jquery';
 import { logic } from './logic';
 import { projectsList } from './todos';
 
@@ -49,6 +50,32 @@ const addTodoToArr = () => {
   });
 };
 
+const showTodoList = () => {
+  console.log('showTodoList fired');
+  // getTodoDiv().innerHTML = '';
+  // const container = todoContainer();
+  // container.setAttribute('class', 'todo-container');
+  // const project = projectsList[index];
+  // project.getTodos().forEach((todo) => {
+  //   container.innerHTML = `
+  //     <div class="card text-center">
+  //       <div class="card-header">
+  //         ${todo.title}
+  //       </div>
+  //       <div class="card-body">
+  //         <h5 class="card-title">${todo.isComplete}</h5>
+  //         <p class="card-text">${todo.description}</p>
+  //         <a href="#" class="btn btn-primary">Edit</a>
+  //       </div>
+  //       <div class="card-footer text-muted">
+  //         Date made
+  //       </div>
+  //     </div>
+  // `;
+  // });
+  // getTodoDiv().appendChild(container);
+};
+
 const gatherProjects = () => {
   let html = '';
   let i = 0;
@@ -85,31 +112,6 @@ const queries = (() => {
     return html;
   };
 
-  const showTodoList = (index) => {
-    console.log('trigger showTodoList');
-    const container = todoContainer();
-    container.setAttribute('class', 'todo-container');
-    const project = projectsList[index];
-    project.getTodos().forEach((todo) => {
-      container.innerHTML = `
-        <div class="card text-center">
-          <div class="card-header">
-            ${todo.title}
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">${todo.isComplete}</h5>
-            <p class="card-text">${todo.description}</p>
-            <a href="#" class="btn btn-primary">Edit</a>
-          </div>
-          <div class="card-footer text-muted">
-            Date made
-          </div>
-        </div>
-    `;
-    });
-    getTodoDiv().innerHTML = container;
-  };
-
   const displayFormTodo = () => {
     const html = `
       <div class="hide-form-todo" id="form">
@@ -135,10 +137,9 @@ const queries = (() => {
 
   const giveBtnProjectsListeners = () => {
     console.log(getBtnProjects());
-    let i = 0;
     [...getBtnProjects()].forEach((project) => {
-      project.addEventListener('click', () => { showTodoList(i); });
-      i += 1;
+      console.log(project);
+      project.onclick = showTodoList;
     });
   };
 
