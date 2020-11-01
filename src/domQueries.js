@@ -12,16 +12,8 @@ const getTodoTitle = () => document.querySelector('#title').value;
 const getTodoDescription = () => document.querySelector('#description').value;
 const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
 const todoContainer = () => document.createElement('div');
-const todoContentTitle = () => document.querySelector('.title');
-const todoContentDescription = () => document.querySelector('.description');
-const todoContent = () => document.querySelector('.todo');
 const getBtnProjects = () => document.getElementsByClassName('project');
 const getTodoDiv = () => document.getElementById('todos');
-// const setTodoContentElements = () => {
-//   todoContentTitle().value;
-//   todoContentDescription().value;
-//   todoContent().value;
-// };
 
 const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
 const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
@@ -50,30 +42,29 @@ const addTodoToArr = () => {
   });
 };
 
-const showTodoList = () => {
-  console.log('showTodoList fired');
-  // getTodoDiv().innerHTML = '';
-  // const container = todoContainer();
-  // container.setAttribute('class', 'todo-container');
-  // const project = projectsList[index];
-  // project.getTodos().forEach((todo) => {
-  //   container.innerHTML = `
-  //     <div class="card text-center">
-  //       <div class="card-header">
-  //         ${todo.title}
-  //       </div>
-  //       <div class="card-body">
-  //         <h5 class="card-title">${todo.isComplete}</h5>
-  //         <p class="card-text">${todo.description}</p>
-  //         <a href="#" class="btn btn-primary">Edit</a>
-  //       </div>
-  //       <div class="card-footer text-muted">
-  //         Date made
-  //       </div>
-  //     </div>
-  // `;
-  // });
-  // getTodoDiv().appendChild(container);
+const showTodoList = (index) => {
+  getTodoDiv().innerHTML = '';
+  const container = todoContainer();
+  container.setAttribute('class', 'todo-container');
+  const project = projectsList[index];
+  project.getTodos().forEach((todo) => {
+    container.innerHTML = `
+      <div class="card text-center">
+        <div class="card-header">
+          ${todo.title}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">${todo.isComplete}</h5>
+          <p class="card-text">${todo.description}</p>
+          <a href="#" class="btn btn-primary">Edit</a>
+        </div>
+        <div class="card-footer text-muted">
+          Date made
+        </div>
+      </div>
+  `;
+  });
+  getTodoDiv().appendChild(container);
 };
 
 const gatherProjects = () => {
@@ -86,23 +77,22 @@ const gatherProjects = () => {
   return html;
 };
 
-const queries = (() => {
-  const displaySetup = () => {
-    body.innerHTML = `
-    <div id="container" class="bg-primary">
-      <div class="add-todo-form">
-        <div id="edit">
-          <h3>Edit</h3>
-          <button class="add-btn">Add Todo</button>
-        </div>
-        <div id="projects">
-          ${gatherProjects()}
-        </div>
-        <div id="todos"></div>
+const displaySetup = () => {
+  body.innerHTML = `
+  <div id="container" class="bg-primary">
+    <div class="add-todo-form">
+      <div id="edit">
+        <h3>Edit</h3>
+        <button class="add-btn">Add Todo</button>
       </div>
+      <div id="projects">
+        ${gatherProjects()}
+      </div>
+      <div id="todos"></div>
     </div>
-    `;
-  };
+  </div>
+  `;
+};
 
   const displaySelect = () => {
     let html = '';
@@ -137,9 +127,8 @@ const queries = (() => {
 
   const giveBtnProjectsListeners = () => {
     console.log(getBtnProjects());
-    [...getBtnProjects()].forEach((project) => {
-      console.log(project);
-      project.onclick = showTodoList;
+    [...getBtnProjects()].forEach((project, i) => {
+      project.onclick = () => { showTodoList(i); };
     });
   };
 
