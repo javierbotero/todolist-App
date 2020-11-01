@@ -10,14 +10,17 @@ const getTodoSubmit = () => document.querySelector('.submit-todo');
 const getTodoTitle = () => document.querySelector('#title').value;
 const getTodoDescription = () => document.querySelector('#description').value;
 const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
+const todoContainer = () => document.createElement('div');
 const todoContentTitle = () => document.querySelector('.title');
 const todoContentDescription = () => document.querySelector('.description');
-const todoContentProject = () => document.querySelector('.project');
-const setTodoContentElements = () => {
-  todoContentTitle().value;
-  todoContentDescription().value;
-  todoContentProject().value;
-};
+const todoContent = () => document.querySelector('.todo');
+const getBtnProjects = () => document.getElementsByClassName('project');
+const getTodoDiv = () => document.getElementById('todos');
+// const setTodoContentElements = () => {
+//   todoContentTitle().value;
+//   todoContentDescription().value;
+//   todoContent().value;
+// };
 
 const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
 const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
@@ -46,22 +49,29 @@ const addTodoToArr = () => {
   });
 };
 
+const gatherProjects = () => {
+  let html = '';
+  let i = 0;
+  logic.projectsList.forEach((project) => {
+    html += `<button class="project" data-index="${i}">${project.title}</button>`
+    i += 1;
+  });
+  return html;
+};
+
 const queries = (() => {
   const displaySetup = () => {
     body.innerHTML = `
-    <div id="container">
-      <div class="todo-content">
-        <h3 class="title">${getTodoTitle().value}</h3>
-        <h3 class="description">${getTodoDescription().value}</h3>
-        <h3 class="project">${getTodoProject().value}</h3>
-        <button class="add-todo">Add New Todo</button>
-      </div>
+    <div id="container" class="bg-primary">
       <div class="add-todo-form">
         <div id="edit">
-        <h3>Edit</h3>
-        <button class="add-btn">Add Todo</button>
+          <h3>Edit</h3>
+          <button class="add-btn">Add Todo</button>
         </div>
-        <div id="projects">PROJECTS</div>
+        <div id="projects">
+          ${gatherProjects()}
+        </div>
+        <div id="todos"></div>
       </div>
     </div>
     `;
@@ -75,19 +85,30 @@ const queries = (() => {
     return html;
   };
 
-  // const showTodoList = () => {
-  //   const todoContainer = document.createElement('div');
-  //   todoContainer.setAttribute('class', 'todo-container');
-  //   todoContainer.innerHTML = `
-  //     <div class="todo-content">
-  //       <h3 class="title">${getTodoTitle().value}</h3>
-  //       <h3 class="description">${getTodoDescription().value}</h3>
-  //       <h3 class="project">${getTodoProject().value}</h3>
-  //       <button class="add-todo">Add New Todo</button>
-  //     </div>
-  //   `;
-  //   return todoContainer;
-  // };
+  const showTodoList = (index) => {
+    console.log('trigger showTodoList');
+    const container = todoContainer();
+    container.setAttribute('class', 'todo-container');
+    const project = projectsList[index];
+    project.getTodos().forEach((todo) => {
+      container.innerHTML = `
+        <div class="card text-center">
+          <div class="card-header">
+            ${todo.title}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">${todo.isComplete}</h5>
+            <p class="card-text">${todo.description}</p>
+            <a href="#" class="btn btn-primary">Edit</a>
+          </div>
+          <div class="card-footer text-muted">
+            Date made
+          </div>
+        </div>
+    `;
+    });
+    getTodoDiv().innerHTML = container;
+  };
 
   const displayFormTodo = () => {
     const html = `
@@ -112,10 +133,20 @@ const queries = (() => {
     addCloseTodo();
   };
 
+  const giveBtnProjectsListeners = () => {
+    console.log(getBtnProjects());
+    let i = 0;
+    [...getBtnProjects()].forEach((project) => {
+      project.addEventListener('click', () => { showTodoList(i); });
+      i += 1;
+    });
+  };
+
   return {
     displaySetup,
     displayFormTodo,
     getTodoBtn,
+    giveBtnProjectsListeners,
   };
 })();
 
