@@ -5,3 +5,11 @@
 .show-form-todo {
   display: block;
 }
+
+.projects-zone {
+  min-height: 200px;
+}
+
+.project, .todo {
+  width: 30%;
+}

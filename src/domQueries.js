@@ -1,4 +1,3 @@
-import { get } from 'jquery';
 import { logic } from './logic';
 import { projectsList } from './todos';
 
@@ -15,84 +14,89 @@ const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project');
 const getTodoDiv = () => document.getElementById('todos');
 
-const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
-const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
 
-const addBtnTodoEventDisplay = () => {
-  getTodoBtn().onclick = showFormTodo;
-};
+const queries = (() => {
+  const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
+  const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
 
-const addCloseTodo = () => {
-  getCloseBtn().onclick = hideFormTodo;
-  getTodoSubmit().onclick = hideFormTodo;
-  addTodoToArr();
-};
+  const addBtnTodoEventDisplay = () => {
+    getTodoBtn().onclick = showFormTodo;
+  };
 
-const todoObject = () => {
-  const title = getTodoTitle();
-  const description = getTodoDescription();
-  const selectProject = getTodoProject();
-  logic.createTodo(title, description, selectProject);
-};
+  const addCloseTodo = () => {
+    getCloseBtn().onclick = hideFormTodo;
+    getTodoSubmit().onclick = hideFormTodo;
+    addTodoToArr();
+  };
 
-const addTodoToArr = () => {
-  getTodoSubmit().addEventListener('click', (e) => {
-    e.preventDefault();
-    todoObject();
-  });
-};
-
-const showTodoList = (index) => {
-  getTodoDiv().innerHTML = '';
-  const container = todoContainer();
-  container.setAttribute('class', 'todo-container');
-  const project = projectsList[index];
-  project.getTodos().forEach((todo) => {
-    container.innerHTML = `
-      <div class="card text-center">
-        <div class="card-header">
-          ${todo.title}
+  const showTodoList = (index) => {
+    const project = projectsList[index];
+    getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark">${project.title} todos</h5>`;
+    const container = todoContainer();
+    container.classList = 'todo-container d-flex flex-wrap p-3';
+    project.getTodos().forEach((todo) => {
+      container.innerHTML += `
+        <div class="card text-center todo mr-2 mb-2">
+          <div class="card-header">
+            <h5 class="text-dark">${todo.title}</h5>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">${todo.isComplete}</h5>
+            <p class="card-text">${todo.description}</p>
+            <a href="#" class="btn btn-info">Edit</a>
+          </div>
+          <div class="card-footer text-muted">
+            Date made
+          </div>
         </div>
-        <div class="card-body">
-          <h5 class="card-title">${todo.isComplete}</h5>
-          <p class="card-text">${todo.description}</p>
-          <a href="#" class="btn btn-primary">Edit</a>
-        </div>
-        <div class="card-footer text-muted">
-          Date made
-        </div>
+    `;
+    });
+    getTodoDiv().appendChild(container);
+  };
+
+  const todoObject = () => {
+    const title = getTodoTitle();
+    const description = getTodoDescription();
+    const selectProject = getTodoProject();
+    logic.createTodo(title, description, selectProject);
+    showTodoList(selectProject);
+  };
+
+  const addTodoToArr = () => {
+    getTodoSubmit().addEventListener('click', (e) => {
+      e.preventDefault();
+      todoObject();
+    });
+  };
+
+  const gatherProjects = () => {
+    let html = '';
+    let i = 0;
+    logic.projectsList.forEach((project) => {
+      html += `<button class="project p-1 border-0 rounded bg-light text-info mr-2 mb-2" data-index="${i}">${project.title}</button>`
+      i += 1;
+    });
+    return html;
+  };
+
+  const displaySetup = () => {
+    body.innerHTML = `
+    <div id="container" class="bg-info min-vh-100 container-fluid p-0">
+      <div id="edit" class="edit-zone bg-light text-center p-5">
+        <h3 class="p-3 text-info font-weight-bold">My Todos App</h3>
+        <p>The perfect place to organize your life!</p>
+        <button class="add-btn p-3 border-0 rounded bg-info text-white">Add Todo</button>
+        <button class="add-btn-project p-3 border-0 rounded bg-info text-white">Add Project</button>
       </div>
-  `;
-  });
-  getTodoDiv().appendChild(container);
-};
-
-const gatherProjects = () => {
-  let html = '';
-  let i = 0;
-  logic.projectsList.forEach((project) => {
-    html += `<button class="project" data-index="${i}">${project.title}</button>`
-    i += 1;
-  });
-  return html;
-};
-
-const displaySetup = () => {
-  body.innerHTML = `
-  <div id="container" class="bg-primary">
-    <div class="add-todo-form">
-      <div id="edit">
-        <h3>Edit</h3>
-        <button class="add-btn">Add Todo</button>
-      </div>
-      <div id="projects">
+      <div id="projects" class="projects-zone p-3 d-flex flex-wrap">
+        <h4 class="py-5 text-center text-light w-100">My Projects</h4>
         ${gatherProjects()}
       </div>
-      <div id="todos"></div>
+      <div id="todos" class="bg-light">
+      </div>
     </div>
-  </div>
-  `;
-};
+    `;
+  };
 
   const displaySelect = () => {
     let html = '';
@@ -137,7 +141,9 @@ const displaySetup = () => {
     displayFormTodo,
     getTodoBtn,
     giveBtnProjectsListeners,
+    showTodoList,
   };
+
 })();
 
-export default queries;
+export { queries };
