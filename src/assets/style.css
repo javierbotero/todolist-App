@@ -2,14 +2,42 @@
   display: none;
 }
 
-.show-form-todo {
-  display: block;
-}
-
 .projects-zone {
   min-height: 200px;
 }
 
 .project, .todo {
   width: 30%;
+}
+
+.form-todo {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(0,174,200);
+  color: white;
+  width: 50%;
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  padding: 2em;
+  border-radius: 15px;
+  border: 2px solid floralwhite;
+}
+
+.close-x {
+  float: right;
+  background-color: whitesmoke;
+  color: black;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-x:hover {
+  cursor: pointer;
+  background-color: rgb(151, 151, 151);
 }

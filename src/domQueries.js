@@ -4,6 +4,9 @@ import { projectsList } from './todos';
 const { body } = document;
 const getContainer = () => document.getElementById('container');
 const formTodo = () => document.getElementById('form');
+const getformEditTodo = () => document.getElementById('form-edit-todo');
+const getCloseEditBtn = () => document.getElementById('x');
+const getTodoEditSubmit = () => document.getElementById('submit-edit');
 const getTodoBtn = () => document.querySelector('.add-btn');
 const getCloseBtn = () => document.querySelector('.ex-btn');
 const getTodoSubmit = () => document.querySelector('.submit-todo');
@@ -20,10 +23,27 @@ const btnInfo = () => document.querySelector('.edit-todo');
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
-  const showFormTodo = () => { formTodo().className = 'show-form-todo'; };
+  const showFormTodo = () => { 
+    formTodo().className = 'form-todo';
+    addCloseTodo();
+  };
 
   const addBtnTodoEventDisplay = () => {
     getTodoBtn().onclick = showFormTodo;
+  };
+
+  const addTodoToArr = () => {
+    getTodoSubmit().addEventListener('click', (e) => {
+      e.preventDefault();
+      todoObject();
+    });
+  };
+
+  const removeEditTodoForm = () => {
+    console.log(getformEditTodo());
+    getformEditTodo().remove();
+    editTodo();
+    addBtnTodoEventDisplay();
   };
 
   const addCloseTodo = () => {
@@ -32,12 +52,17 @@ const queries = (() => {
     addTodoToArr();
   };
 
+  const addCloseEditTodo = () => {
+    getCloseEditBtn().addEventListener('click', removeEditTodoForm);
+    getTodoEditSubmit().addEventListener('click', removeEditTodoForm);
+  };
+
   const showTodoList = (index) => {
     const project = projectsList[index];
     getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark">${project.title} todos</h5>`;
     const container = todoContainer();
     container.classList = 'todo-container d-flex flex-wrap p-3';
-    project.getTodos().forEach((todo) => {
+    project.getTodos().forEach((todo, i) => {
       container.innerHTML += `
         <div class="card text-center todo mr-2 mb-2">
           <div class="card-header">
@@ -46,7 +71,7 @@ const queries = (() => {
           <div class="card-body">
             <h5 class="card-title">${todo.isComplete}</h5>
             <p class="card-text">${todo.description}</p>
-            <a href="#" class="btn btn-info edit-todo">Edit</a>
+            <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info edit-todo">Edit</a>
           </div>
           <div class="card-footer text-muted">
             Date made
@@ -64,13 +89,6 @@ const queries = (() => {
     const selectProject = getTodoProject();
     logic.createTodo(title, description, selectProject);
     showTodoList(selectProject);
-  };
-
-  const addTodoToArr = () => {
-    getTodoSubmit().addEventListener('click', (e) => {
-      e.preventDefault();
-      todoObject();
-    });
   };
 
   const gatherProjects = () => {
@@ -102,18 +120,52 @@ const queries = (() => {
     `;
   };
 
-  const displaySelect = () => {
+  const selected = (indexSelected, i) => {
     let html = '';
-    projectsList.forEach((project) => {
-      html += `<option value="${project.title}">${project.title}</option>`;
+    if (indexSelected) {
+      if (indexSelected === i) {
+        html += 'selected';
+      }
+    }
+    return html;
+  };
+
+  const displaySelect = (indexSelected = false) => {
+    let html = '';
+    projectsList.forEach((project, i) => {
+      html += `<option value="${project.title}" ${selected(indexSelected, i)}>${project.title}</option>`;
     });
     return html;
+  };
+
+  const displayFormEditTodo = (indexProject, indexTodo) => {
+    console.log('displauy edit called');
+    const todo = projectsList[indexProject].todos[indexTodo];
+    const html = `
+      <div class="form-todo" id="form-edit-todo">
+        <div id="x"><span class="close-x">x</span></div>
+        <form>
+          <label for="title">Title</lable><br>
+          <input type="text" id="title" value="${todo.title}">
+          <label for="description">Description</lable><br>
+          <input type="text" id="description" value="${todo.description}">
+          <label for="projects-select">Select the project</label>
+          <select id="projects-select">
+            ${displaySelect(todo.indexProject)}
+          </select>
+          <input class="submit-todo" id="submit-edit" type="submit" value="Submit">
+        </form>
+      </div>
+    `;
+    body.innerHTML += html;
+    window.scrollTo(0, 0);
+    addCloseEditTodo();
   };
 
   const displayFormTodo = () => {
     const html = `
       <div class="hide-form-todo" id="form">
-        <div class='ex-btn'><span>X</span></div>
+        <div class='ex-btn'><span class="close-x">x</span></div>
         <form>
           <label for="title">Title</lable><br>
           <input type="text" id="title">
@@ -143,8 +195,8 @@ const queries = (() => {
     todosContainer().addEventListener('click', (e) => {
       if (e.target.tagName === 'A') {
         e.preventDefault();
-        const parent = e.target.offsetParent.parentElement.previousElementSibling;
-        console.log(parent.textContent);
+        const parent = e.target;
+        displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo);
       }
     });
   };
