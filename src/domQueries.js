@@ -12,7 +12,10 @@ const getTodoDescription = () => document.querySelector('#description').value;
 const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
 const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project');
+const projectsContainer = () => document.getElementById('projects');
+const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
+const btnInfo = () => document.querySelector('.edit-todo');
 
 
 const queries = (() => {
@@ -43,7 +46,7 @@ const queries = (() => {
           <div class="card-body">
             <h5 class="card-title">${todo.isComplete}</h5>
             <p class="card-text">${todo.description}</p>
-            <a href="#" class="btn btn-info">Edit</a>
+            <a href="#" class="btn btn-info edit-todo">Edit</a>
           </div>
           <div class="card-footer text-muted">
             Date made
@@ -52,6 +55,7 @@ const queries = (() => {
     `;
     });
     getTodoDiv().appendChild(container);
+    editTodo();
   };
 
   const todoObject = () => {
@@ -73,7 +77,7 @@ const queries = (() => {
     let html = '';
     let i = 0;
     logic.projectsList.forEach((project) => {
-      html += `<button class="project p-1 border-0 rounded bg-light text-info mr-2 mb-2" data-index="${i}">${project.title}</button>`
+      html += `<button class="project p-1 border-0 rounded bg-light text-info mr-2 mb-2" data-index="${i}">${project.title}</button>`;
       i += 1;
     });
     return html;
@@ -130,9 +134,18 @@ const queries = (() => {
   };
 
   const giveBtnProjectsListeners = () => {
-    console.log(getBtnProjects());
     [...getBtnProjects()].forEach((project, i) => {
       project.onclick = () => { showTodoList(i); };
+    });
+  };
+
+  const editTodo = () => {
+    todosContainer().addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        e.preventDefault();
+        const parent = e.target.offsetParent.parentElement.previousElementSibling;
+        console.log(parent.textContent);
+      }
     });
   };
 
@@ -142,6 +155,7 @@ const queries = (() => {
     getTodoBtn,
     giveBtnProjectsListeners,
     showTodoList,
+    editTodo,
   };
 
 })();
