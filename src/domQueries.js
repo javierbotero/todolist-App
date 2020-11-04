@@ -95,6 +95,7 @@ const queries = (() => {
     );
     removeEditTodoForm();
     showTodoList(project);
+    todosContainer().scrollIntoView();
   };
 
   const addCloseEditTodo = () => {
@@ -109,6 +110,7 @@ const queries = (() => {
     const iscomplete = getTodoIscomplete();
     logic.createTodo(title, description, selectProject, iscomplete);
     showTodoList(selectProject);
+    todosContainer().scrollIntoView();
   };
 
   const removeProjectForm = () => {
