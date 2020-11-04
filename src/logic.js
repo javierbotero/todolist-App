@@ -14,7 +14,7 @@ const logic = (() => {
     projectsList.push(project);
     addToLocalStorage();
   };
-  const createProject = (title) => {
+  const createProject = (title = 'New Project') => {
     const project = projects(title);
     addToProjectsList(project);
   };
@@ -31,16 +31,21 @@ const logic = (() => {
   };
   const createFirstProject = () => {
     if (projectsList.length === 0) {
-      createProject('Defaul Project');
+      editOrCreateProject();
     }
   };
-  // const addTodoToProject = (todo, project) => {
-  //   project.addTodoToTodos(todo);
-  //   addToLocalStorage();
-  // };
   const switchTodoCompleted = (indexProject, indexTodo) => {
     const todo = projectsList[indexProject].getTodos()[indexTodo];
     todo.isComplete = !todo.isComplete;
+    addToLocalStorage();
+  };
+  const editOrCreateProject = (title = 'New project', indexProject = false) => {
+    if (indexProject) {
+      projectsList[indexProject].title = title;
+    } else {
+      const project = projects(title);
+      addToProjectsList(project);
+    }
     addToLocalStorage();
   };
   const editTodo = (indexOfProject, indexOfTodo, title, description, indexProject, isComplete) => {
@@ -64,9 +69,9 @@ const logic = (() => {
     createTodo,
     addToProjectsList,
     createFirstProject,
-    // addTodoToProject,
     editTodo,
     switchTodoCompleted,
+    editOrCreateProject,
     deleteProject,
     addToLocalStorage,
     getObjFromLocStorage,

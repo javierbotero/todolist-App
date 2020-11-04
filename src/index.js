@@ -11,7 +11,9 @@ if (localStorage.projects) {
 
 logic.createFirstProject();
 queries.displaySetup();
+queries.gatherProjects();
 queries.displayFormTodo();
 queries.showTodoList(0);
 queries.giveBtnProjectsListeners();
 queries.addTodoToArr();
+queries.addEventToBtnAddProjects();

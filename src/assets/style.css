@@ -6,10 +6,6 @@
   min-height: 200px;
 }
 
-.project, .todo {
-  width: 30%;
-}
-
 .form-todo {
   display: flex;
   flex-direction: column;

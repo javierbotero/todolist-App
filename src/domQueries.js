@@ -2,8 +2,9 @@ import { logic } from './logic';
 import { projectsList } from './todos';
 
 const { body } = document;
-const getContainer = () => document.getElementById('container');
+const getProjectsDiv = () => document.getElementById('projects');
 const formTodo = () => document.getElementById('form');
+const getAddProjectBtn = () => document.querySelector('.add-btn-project');
 const getformEditTodo = () => document.getElementById('form-edit-todo');
 const getCloseEditBtn = () => document.getElementById('x');
 const getTodoEditSubmit = () => document.getElementById('submit-edit');
@@ -15,16 +16,17 @@ const getTodoDescription = () => document.querySelector('#description').value;
 const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
 const getTodoIscomplete = () => document.getElementById('iscomplete').selectedIndex;
 const todoContainer = () => document.createElement('div');
-const getBtnProjects = () => document.getElementsByClassName('project');
-const projectsContainer = () => document.getElementById('projects');
+const getBtnProjects = () => document.getElementsByClassName('project-show-todos');
 const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
 const getEditTodoTitle = () => document.getElementById('edit-todo-title').value;
 const getEditTodoDescription = () => document.getElementById('edit-description').value;
 const getEditTodoIsComplete = () => document.getElementById('edit-iscomplete').value;
 const getEditProjectSelect = () => document.getElementById('edit-select').selectedIndex;
-const btnInfo = () => document.querySelector('.edit-todo');
-
+const getXProjectForm = () => document.getElementById('x-project-form');
+const getSubmitBtnProjectForm = () => document.getElementById('project-submit');
+const getFormProject = () => document.getElementById('form-project');
+const getTitleFormProject = () => document.getElementById('title-project').value;
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -42,6 +44,7 @@ const queries = (() => {
     editTodo();
     addBtnTodoEventDisplay();
     giveBtnProjectsListeners();
+    addEventToBtnAddProjects();
   };
 
   const addCloseTodo = () => {
@@ -50,13 +53,14 @@ const queries = (() => {
   };
 
   const showTodoList = (index) => {
+    console.log('Showing todos');
     const project = projectsList[index];
     getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark">${project.title} todos</h5>`;
     const container = todoContainer();
     container.classList = 'todo-container d-flex flex-wrap p-3';
     project.getTodos().forEach((todo, i) => {
       container.innerHTML += `
-        <div class="card text-center todo mr-2 mb-2">
+        <div class="card text-center todo mr-2 mb-2 col-sm-5 col-md-3 m-0 p-0">
           <div class="card-header">
             <h5 class="text-dark">${todo.title}</h5>
           </div>
@@ -107,6 +111,62 @@ const queries = (() => {
     showTodoList(selectProject);
   };
 
+  const removeProjectForm = () => {
+    body.removeChild(getFormProject());
+    addTodoToArr();
+    addBtnTodoEventDisplay();
+    addEventToBtnAddProjects();
+    giveBtnProjectsListeners();
+    editTodo();
+  };
+
+  const createOrEditProject = (e) => {
+    e.preventDefault();
+    const title = getTitleFormProject();
+    // eslint-disable-next-line max-len
+    const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
+    logic.editOrCreateProject(title, index);
+    removeProjectForm();
+    gatherProjects();
+    giveBtnProjectsListeners();
+  };
+
+  const addCloseProjectForm = () => {
+    getXProjectForm().addEventListener('click', removeProjectForm);
+    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
+  };
+
+  const displayFormProject = (project = false) => {
+    const html = `
+      <div id="form-project" class="form-todo">
+        <div id="x-project-form"><span class="close-x">x</span></div>
+        <h5>${project ? `Edit title project: ${projectsList[project].title}` : 'Add a New Project'}</h5>
+        <form>
+          <label for="title-project">Title</label>
+          <input id="title-project" type="text" ${project ? `value="${projectsList[project].title}"` : ''}><br>
+          <input type="submit" id="project-submit" ${project ? `data-index-project="${project}"` : ''} value="Submit">
+        </form>
+      </div>
+    `;
+
+    body.innerHTML += html;
+    addCloseProjectForm();
+  };
+
+  const giveBtnProjectsListeners = () => {
+    [...getBtnProjects()].forEach((project, i) => {
+      console.log(project);
+      project.onclick = () => { showTodoList(i); };
+    });
+  };
+
+  const addEventToBtnAddProjects = () => {
+    getAddProjectBtn().addEventListener('click', (e) => {
+      e.preventDefault();
+      displayFormProject();
+    });
+  };
+
   const addTodoToArr = () => {
     getTodoSubmit().addEventListener('click', (e) => {
       e.preventDefault();
@@ -115,13 +175,22 @@ const queries = (() => {
   };
 
   const gatherProjects = () => {
-    let html = '';
+    let html = '<h4 class="py-5 text-center text-light w-100">My Projects</h4>';
     let i = 0;
     logic.projectsList.forEach((project) => {
-      html += `<button class="project p-1 border-0 rounded bg-light text-info mr-2 mb-2" data-index="${i}">${project.title}</button>`;
+      html += `
+      <div class="project col-sm-5 col-md-3 card bg-light mb-3 mr-2 p-0 text-center">
+        <div class="card-header">${project.title}</div>
+        <div class="card-body">
+          <button class="project-show-todos py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Todos</button>
+          <button class="project-edit py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Edit</button>
+          <button class="project-delete py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Delete</button>
+        </div>
+      </div>
+      `;
       i += 1;
     });
-    return html;
+    getProjectsDiv().innerHTML = html;
   };
 
   const displaySetup = () => {
@@ -133,11 +202,11 @@ const queries = (() => {
         <button class="add-btn p-3 border-0 rounded bg-info text-white">Add Todo</button>
         <button class="add-btn-project p-3 border-0 rounded bg-info text-white">Add Project</button>
       </div>
-      <div id="projects" class="projects-zone p-3 d-flex flex-wrap">
-        <h4 class="py-5 text-center text-light w-100">My Projects</h4>
-        ${gatherProjects()}
-      </div>
-      <div id="todos" class="bg-light">
+      <div class="container">
+        <div id="projects" class="projects-zone p-3 d-flex flex-wrap justify-content-around">
+        </div>
+        <div id="todos" class="bg-light rounded">
+        </div>
       </div>
     </div>
     `;
@@ -217,12 +286,6 @@ const queries = (() => {
     addCloseTodo();
   };
 
-  const giveBtnProjectsListeners = () => {
-    [...getBtnProjects()].forEach((project, i) => {
-      project.onclick = () => { showTodoList(i); };
-    });
-  };
-
   const editTodo = () => {
     todosContainer().addEventListener('click', (e) => {
       if (e.target.tagName === 'A') {
@@ -234,6 +297,7 @@ const queries = (() => {
   };
 
   return {
+    gatherProjects,
     displaySetup,
     displayFormTodo,
     getTodoBtn,
@@ -241,6 +305,7 @@ const queries = (() => {
     showTodoList,
     editTodo,
     addTodoToArr,
+    addEventToBtnAddProjects,
   };
 
 })();
