@@ -34,10 +34,10 @@ const logic = (() => {
       createProject('Defaul Project');
     }
   };
-  const addTodoToProject = (todo, project) => {
-    project.addTodoToTodos(todo);
-    addToLocalStorage();
-  };
+  // const addTodoToProject = (todo, project) => {
+  //   project.addTodoToTodos(todo);
+  //   addToLocalStorage();
+  // };
   const switchTodoCompleted = (indexProject, indexTodo) => {
     const todo = projectsList[indexProject].getTodos()[indexTodo];
     todo.isComplete = !todo.isComplete;
@@ -48,6 +48,10 @@ const logic = (() => {
     projectsList[indexOfProject].todos[indexOfTodo].description = description;
     projectsList[indexOfProject].todos[indexOfTodo].setIndexProject(indexProject);
     projectsList[indexOfProject].todos[indexOfTodo].isComplete = isComplete;
+    if (indexOfProject !== indexProject) {
+      projectsList[indexProject].todos.push(projectsList[indexOfProject].todos[indexOfTodo]);
+      projectsList[indexOfProject].todos.splice(indexOfTodo, 1);
+    };
     addToLocalStorage();
   };
   const deleteProject = (index) => {
@@ -60,7 +64,7 @@ const logic = (() => {
     createTodo,
     addToProjectsList,
     createFirstProject,
-    addTodoToProject,
+    // addTodoToProject,
     editTodo,
     switchTodoCompleted,
     deleteProject,

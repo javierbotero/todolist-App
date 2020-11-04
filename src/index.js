@@ -14,3 +14,4 @@ queries.displaySetup();
 queries.displayFormTodo();
 queries.showTodoList(0);
 queries.giveBtnProjectsListeners();
+queries.addTodoToArr();

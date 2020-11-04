@@ -13,17 +13,22 @@ const getTodoSubmit = () => document.querySelector('.submit-todo');
 const getTodoTitle = () => document.querySelector('#title').value;
 const getTodoDescription = () => document.querySelector('#description').value;
 const getTodoProject = () => document.querySelector('#projects-select').selectedIndex;
+const getTodoIscomplete = () => document.getElementById('iscomplete').selectedIndex;
 const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project');
 const projectsContainer = () => document.getElementById('projects');
 const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
+const getEditTodoTitle = () => document.getElementById('edit-todo-title').value;
+const getEditTodoDescription = () => document.getElementById('edit-description').value;
+const getEditTodoIsComplete = () => document.getElementById('edit-iscomplete').value;
+const getEditProjectSelect = () => document.getElementById('edit-select').selectedIndex;
 const btnInfo = () => document.querySelector('.edit-todo');
 
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
-  const showFormTodo = () => { 
+  const showFormTodo = () => {
     formTodo().className = 'form-todo';
     addCloseTodo();
   };
@@ -32,29 +37,16 @@ const queries = (() => {
     getTodoBtn().onclick = showFormTodo;
   };
 
-  const addTodoToArr = () => {
-    getTodoSubmit().addEventListener('click', (e) => {
-      e.preventDefault();
-      todoObject();
-    });
-  };
-
   const removeEditTodoForm = () => {
-    console.log(getformEditTodo());
     getformEditTodo().remove();
     editTodo();
     addBtnTodoEventDisplay();
+    giveBtnProjectsListeners();
   };
 
   const addCloseTodo = () => {
     getCloseBtn().onclick = hideFormTodo;
     getTodoSubmit().onclick = hideFormTodo;
-    addTodoToArr();
-  };
-
-  const addCloseEditTodo = () => {
-    getCloseEditBtn().addEventListener('click', removeEditTodoForm);
-    getTodoEditSubmit().addEventListener('click', removeEditTodoForm);
   };
 
   const showTodoList = (index) => {
@@ -83,12 +75,43 @@ const queries = (() => {
     editTodo();
   };
 
+  const updateTodo = (e) => {
+    e.preventDefault();
+    const title = getEditTodoTitle();
+    const description = getEditTodoDescription();
+    const isComplete = getEditTodoIsComplete();
+    const project = getEditProjectSelect();
+    logic.editTodo(
+      parseInt(e.target.dataset.indexProject, 10),
+      e.target.dataset.indexTodo,
+      title,
+      description,
+      project,
+      isComplete,
+    );
+    removeEditTodoForm();
+    showTodoList(project);
+  };
+
+  const addCloseEditTodo = () => {
+    getCloseEditBtn().addEventListener('click', removeEditTodoForm);
+    getTodoEditSubmit().addEventListener('click', (e) => { updateTodo(e); });
+  };
+
   const todoObject = () => {
     const title = getTodoTitle();
     const description = getTodoDescription();
     const selectProject = getTodoProject();
-    logic.createTodo(title, description, selectProject);
+    const iscomplete = getTodoIscomplete();
+    logic.createTodo(title, description, selectProject, iscomplete);
     showTodoList(selectProject);
+  };
+
+  const addTodoToArr = () => {
+    getTodoSubmit().addEventListener('click', (e) => {
+      e.preventDefault();
+      todoObject();
+    });
   };
 
   const gatherProjects = () => {
@@ -139,21 +162,25 @@ const queries = (() => {
   };
 
   const displayFormEditTodo = (indexProject, indexTodo) => {
-    console.log('displauy edit called');
     const todo = projectsList[indexProject].todos[indexTodo];
     const html = `
       <div class="form-todo" id="form-edit-todo">
         <div id="x"><span class="close-x">x</span></div>
         <form>
           <label for="title">Title</lable><br>
-          <input type="text" id="title" value="${todo.title}">
+          <input type="text" id="edit-todo-title" value="${todo.title}">
           <label for="description">Description</lable><br>
-          <input type="text" id="description" value="${todo.description}">
-          <label for="projects-select">Select the project</label>
-          <select id="projects-select">
+          <input type="text" id="edit-description" value="${todo.description}"><br>
+          <label for="projects-select">Select the project</label><br>
+          <select id="edit-select">
             ${displaySelect(todo.indexProject)}
-          </select>
-          <input class="submit-todo" id="submit-edit" type="submit" value="Submit">
+          </select><br>
+          <label for="edit-iscomplete">Is it completed?</label><br>
+          <select id="edit-iscomplete">
+            <option value="false">Not completed</option>
+            <option value="true">Completed</option>
+          </select><br>
+          <input class="submit-todo" id="submit-edit" type="submit" value="Submit" data-index-project="${indexProject}" data-index-todo="${indexTodo}">
         </form>
       </div>
     `;
@@ -168,14 +195,19 @@ const queries = (() => {
         <div class='ex-btn'><span class="close-x">x</span></div>
         <form>
           <label for="title">Title</lable><br>
-          <input type="text" id="title">
+          <input type="text" id="title"><br>
           <label for="description">Description</lable><br>
-          <input type="text" id="description">
-          <label for="projects-select">Select the project</label>
+          <input type="text" id="description"><br>
+          <label for="projects-select">Select the project</label><br>
           <select id="projects-select">
             ${displaySelect()}
-          </select>
-          <input class="submit-todo" type="submit" value="Submit">
+          </select><br>
+          <label for="iscomplete">Is it completed?</label><br>
+          <select id="iscomplete">
+            <option value="false">Not Completed</option>
+            <option value="true">Completed</option>
+          <select><br><br>
+          <input class="submit-todo" type="submit" value="Submit"><br>
         </form>
       </div>
     `;
@@ -208,6 +240,7 @@ const queries = (() => {
     giveBtnProjectsListeners,
     showTodoList,
     editTodo,
+    addTodoToArr,
   };
 
 })();
