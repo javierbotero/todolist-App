@@ -55,12 +55,12 @@ const queries = (() => {
   const showTodoList = (index) => {
     console.log('Showing todos');
     const project = projectsList[index];
-    getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark">${project.title} todos</h5>`;
+    getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark col-12">${project.title} todos</h5>`;
     const container = todoContainer();
-    container.classList = 'todo-container d-flex flex-wrap p-3';
+    container.classList = 'todo-container d-flex flex-wrap p-3 w-100';
     project.getTodos().forEach((todo, i) => {
       container.innerHTML += `
-        <div class="card text-center todo mr-2 mb-2 col-sm-5 col-md-3 m-0 p-0">
+        <div class="card text-center todo mr-2 mb-2 col-sm-10 col-md-4 m-0 p-0">
           <div class="card-header">
             <h5 class="text-dark">${todo.title}</h5>
           </div>
@@ -205,7 +205,7 @@ const queries = (() => {
       <div class="container">
         <div id="projects" class="projects-zone p-3 d-flex flex-wrap justify-content-around">
         </div>
-        <div id="todos" class="bg-light rounded">
+        <div id="todos" class="bg-light rounded d-flex flex-wrap justify-content-around">
         </div>
       </div>
     </div>
