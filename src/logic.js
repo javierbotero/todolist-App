@@ -59,12 +59,18 @@ const logic = (() => {
     };
     addToLocalStorage();
   };
+  const deleteTodo = (indexOfProject, indexOfTodo) => {
+    const project = projectsList[indexOfProject];
+    project.deleteTodoFromTodos(indexOfTodo);
+    addToLocalStorage();
+  };
   const deleteProject = (index) => {
     projectsList.splice(index, 1);
     addToLocalStorage();
   };
 
   return {
+    projectsList,
     createProject,
     createTodo,
     addToProjectsList,
@@ -76,7 +82,7 @@ const logic = (() => {
     addToLocalStorage,
     getObjFromLocStorage,
     setProjectsFromLocalStorage,
-    projectsList,
+    deleteTodo,
   };
 })();
 

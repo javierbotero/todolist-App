@@ -175,6 +175,7 @@ const queries = (() => {
         logic.deleteProject(e.target.dataset.index);
         logic.createFirstProject();
         gatherProjects();
+        addListenerToDeleteTodoBtn();
         showTodoList(0);
       }
     }
@@ -201,7 +202,13 @@ const queries = (() => {
   };
 
   const addListenerToDeleteTodoBtn = () => {
-
+    todosContainer().addEventListener('click', e => {
+      if (e.target.textContent === 'Delete') {
+        const indexOfProject = e.target.dataset.indexProject;
+        const indexOfTodo = e.target.dataset.indexTodo;
+        logic.deleteTodo(indexOfProject, indexOfTodo);
+      }
+    });
   };
 
   const addTodoToArr = () => {
@@ -325,12 +332,13 @@ const queries = (() => {
 
   const editTodo = () => {
     todosContainer().addEventListener('click', (e) => {
-      if (e.target.tagName === 'A') {
+      if (e.target.textContent === 'Edit') {
         e.preventDefault();
         const parent = e.target;
         displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo);
+        e.preventDefault();
       }
-    });
+    }, false);
   };
 
   return {
@@ -345,8 +353,8 @@ const queries = (() => {
     addEventToBtnAddProjects,
     addListenerToEditProjects,
     addListenerToDeleteBtnsProject,
+    addListenerToDeleteTodoBtn,
   };
-
 })();
 
 export { queries };
