@@ -17,8 +17,6 @@ const getTodoProject = () => document.querySelector('#projects-select').selected
 const getTodoIscomplete = () => document.getElementById('iscomplete').selectedIndex;
 const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project-show-todos');
-// const getBtnEditProjects = () => document.getElementsByClassName('project-edit');
-// const getBtnDeleteProjects = () => document.getElementsByClassName('project-delete');
 const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
 const getEditTodoTitle = () => document.getElementById('edit-todo-title').value;
@@ -29,8 +27,6 @@ const getXProjectForm = () => document.getElementById('x-project-form');
 const getSubmitBtnProjectForm = () => document.getElementById('project-submit');
 const getFormProject = () => document.getElementById('form-project');
 const getTitleFormProject = () => document.getElementById('title-project').value;
-const getBtnDeleteTodo = () => document.querySelector('.delete-todo');
-const getBtnSwitcherFinishedTodo = () => document.querySelector('.finished-todo');
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -343,10 +339,10 @@ const queries = (() => {
   };
 
   const finishTodo = () => {
-    getBtnSwitcherFinishedTodo().addEventListener('click', e => {
+    todosContainer().addEventListener('click', e => {
       e.preventDefault();
       if (e.target.classList.contains('finished-todo')) {
-        console.log(typeof e.target.textContent);
+        console.log(e.target.textContent);
         const indexOfProject = e.target.dataset.indexProject;
         const indexOfTodo = e.target.dataset.indexTodo;
         logic.switchTodoCompleted(indexOfProject, indexOfTodo);
