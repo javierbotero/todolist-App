@@ -4,8 +4,8 @@ const logic = (() => {
   const addToLocalStorage = () => {
     localStorage.setItem('projects', JSON.stringify(projectsList));
   };
-  const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0, isComplete = false) => {
-    const todo = todos(title, description, indexProject, isComplete);
+  const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0, isComplete = false, dueDate = new Date(2020, 12, 31), checkList = [], priority = 3) => {
+    const todo = todos(title, description, indexProject, isComplete, dueDate, checkList, priority);
     projectsList[indexProject].addTodoToTodos(todo);
     addToLocalStorage();
   };

@@ -27,6 +27,9 @@ const getXProjectForm = () => document.getElementById('x-project-form');
 const getSubmitBtnProjectForm = () => document.getElementById('project-submit');
 const getFormProject = () => document.getElementById('form-project');
 const getTitleFormProject = () => document.getElementById('title-project').value;
+const getTodoDueDate = () => document.getElementById('todo-date').value;
+const getTodoCheckList = () => document.getElementById('todo-check-list').value;
+const getAddANewTaskDiv = () => document.getElementById('add-new-task');
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -35,16 +38,24 @@ const queries = (() => {
     addCloseTodo();
   };
 
+  const addListeners = () => {
+    addTodoToArr();
+    addBtnTodoEventDisplay();
+    addEventToBtnAddProjects();
+    giveBtnProjectsListeners();
+    editTodo();
+    addListenerToEditProjects();
+    addListenerToDeleteTodoBtn();
+    addListenerToDeleteBtnsProject();
+  };
+
   const addBtnTodoEventDisplay = () => {
     getTodoBtn().onclick = showFormTodo;
   };
 
   const removeEditTodoForm = () => {
     getformEditTodo().remove();
-    editTodo();
-    addBtnTodoEventDisplay();
-    giveBtnProjectsListeners();
-    addEventToBtnAddProjects();
+    addListeners();
   };
 
   const addCloseTodo = () => {
@@ -64,10 +75,9 @@ const queries = (() => {
             <h5 class="text-dark">${todo.title}</h5>
           </div>
           <div class="card-body">
-            <h5 class="card-title">${todo.isComplete}</h5>
             <p class="card-text">${todo.description}</p>
             <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info edit-todo">Edit</a>
-            <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info finished-todo">Finished? </a>
+            <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info finished-todo">${todo.isComplete ? 'Completed' : 'Not Completed'}</a>
             <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info delete-todo">Delete</a>
           </div>
           <div class="card-footer text-muted">
@@ -98,8 +108,8 @@ const queries = (() => {
       project,
       isComplete,
     );
-    removeEditTodoForm();
     showTodoList(project);
+    removeEditTodoForm();
     todosContainer().scrollIntoView();
   };
 
@@ -113,19 +123,16 @@ const queries = (() => {
     const description = getTodoDescription();
     const selectProject = getTodoProject();
     const iscomplete = getTodoIscomplete();
-    logic.createTodo(title, description, selectProject, iscomplete);
+    const dueDate = getTodoDueDate();
+    const checkList = getTodoCheckList();
+    logic.createTodo(title, description, selectProject, iscomplete, dueDate, checkList);
     showTodoList(selectProject);
     todosContainer().scrollIntoView();
   };
 
   const removeProjectForm = () => {
     body.removeChild(getFormProject());
-    addTodoToArr();
-    addBtnTodoEventDisplay();
-    addEventToBtnAddProjects();
-    giveBtnProjectsListeners();
-    editTodo();
-    addListenerToEditProjects();
+    addListeners();
   };
 
   const createOrEditProject = (e) => {
@@ -134,9 +141,8 @@ const queries = (() => {
     // eslint-disable-next-line max-len
     const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
     logic.editOrCreateProject(title, index);
-    removeProjectForm();
     gatherProjects();
-    giveBtnProjectsListeners();
+    removeProjectForm();
     getProjectsDiv().scrollIntoView();
   };
 
@@ -272,6 +278,46 @@ const queries = (() => {
     return html;
   };
 
+  const prioritySelect = (todo = false) => {
+    let html = '';
+
+    [1, 2, 3].forEach((n) => {
+      html += `<option value="${n}" ${todo ? 'selected' : ''}>${n}</option>`;
+    });
+
+    return html;
+  };
+
+  const displayNewTask = () => {
+    return `
+      <div class="form-todo" id="form-add-task>
+        <div id="x"><span class="close-x">x</span></div>
+        <form>
+          <label for="description-task">Description</label>
+          <input type="text" id="description-task">
+          <label for="completed-task">Completed ?</label>
+          <select id="completed-task">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </form>
+      </div>
+    `;
+  };
+
+  const addListenerToAddNewTaskDiv = () => {
+    getAddANewTaskDiv().addEventListener('click', displayNewTask);
+  };
+
+  const showTasks = (todo) => {
+    let html = '';
+
+    todo.checkList.forEach((task) => {
+      html += `<li>${task.description}<span>${task.complete}<span></li>`;
+    });
+    return html;
+  };
+
   const displayFormEditTodo = (indexProject, indexTodo) => {
     const todo = projectsList[indexProject].todos[indexTodo];
     const html = `
@@ -290,6 +336,21 @@ const queries = (() => {
           <select id="edit-iscomplete">
             <option value="false">Not completed</option>
             <option value="true">Completed</option>
+          </select><br>
+          <label for="todo-date">Due Date</label><br>
+          <input type="datetime-local" id="todo-date"><br>
+          <div>
+            <h5>Tasks:</h5>
+            <ul id="todo-check-list">
+              ${showTasks()}
+            <ul>
+            <ul id="todo-check-list-new">
+            <ul>
+            <div id="add-new-task">Add a new Task</div>
+          </div>
+          <label for="priority">Priority<label><br>
+          <select id="priority">
+            ${prioritySelect(todo)}
           </select><br>
           <input class="submit-todo" id="submit-edit" type="submit" value="Submit" data-index-project="${indexProject}" data-index-todo="${indexTodo}">
         </form>
@@ -318,6 +379,18 @@ const queries = (() => {
             <option value="false">Not Completed</option>
             <option value="true">Completed</option>
           <select><br><br>
+          <label for="todo-date">Due Date</label><br>
+          <input type="datetime-local" id="todo-date"><br>
+          <div>
+            <h5>Tasks:</h5>
+            <ul id="todo-check-list-new">
+            <ul>
+            <div id="add-new-task">Add a new Task</div>
+          </div>
+          <label for="priority">Priority<label><br>
+          <select id="priority">
+            ${prioritySelect()}
+          </select><br>
           <input class="submit-todo" type="submit" value="Submit"><br>
         </form>
       </div>

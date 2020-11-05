@@ -27,12 +27,15 @@ const behaviorsTodo = (proto) => ({
   getIndexProject: () => proto.indexProject,
 });
 
-const todos = (title, description, indexProject, isComplete) => {
+const todos = (title, description, indexProject, isComplete, dueDate, checkList, priority) => {
   const proto = {
     title,
     description,
     indexProject,
     isComplete,
+    dueDate,
+    checkList,
+    priority,
   };
   return Object.assign(proto, behaviorsTodo(proto));
 };
