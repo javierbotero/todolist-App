@@ -29,6 +29,8 @@ const getXProjectForm = () => document.getElementById('x-project-form');
 const getSubmitBtnProjectForm = () => document.getElementById('project-submit');
 const getFormProject = () => document.getElementById('form-project');
 const getTitleFormProject = () => document.getElementById('title-project').value;
+const getBtnDeleteTodo = () => document.querySelector('.delete-todo');
+const getBtnSwitcherFinishedTodo = () => document.querySelector('.finished-todo');
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -55,7 +57,6 @@ const queries = (() => {
   };
 
   const showTodoList = (index) => {
-    console.log('Showing todos');
     const project = projectsList[index];
     getTodoDiv().innerHTML = `<h4 class="py-5 text-center text-dark col-12">${project.title} todos</h5>`;
     const container = todoContainer();
@@ -70,6 +71,8 @@ const queries = (() => {
             <h5 class="card-title">${todo.isComplete}</h5>
             <p class="card-text">${todo.description}</p>
             <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info edit-todo">Edit</a>
+            <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info finished-todo">Finished? </a>
+            <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info delete-todo">Delete</a>
           </div>
           <div class="card-footer text-muted">
             Date made
@@ -87,6 +90,7 @@ const queries = (() => {
     const title = getEditTodoTitle();
     const description = getEditTodoDescription();
     const isComplete = getEditTodoIsComplete();
+    console.log(typeof isComplete);
     const project = getEditProjectSelect();
     logic.editTodo(
       parseInt(e.target.dataset.indexProject, 10),
@@ -107,6 +111,7 @@ const queries = (() => {
   };
 
   const todoObject = () => {
+    console.log(typeof getTodoIscomplete());
     const title = getTodoTitle();
     const description = getTodoDescription();
     const selectProject = getTodoProject();
@@ -193,6 +198,10 @@ const queries = (() => {
 
   const addListenerToDeleteBtnsProject = () => {
     getProjectsDiv().addEventListener('click', (e) => { deleteProject(e); });
+  };
+
+  const addListenerToDeleteTodoBtn = () => {
+
   };
 
   const addTodoToArr = () => {
