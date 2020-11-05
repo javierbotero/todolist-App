@@ -204,9 +204,11 @@ const queries = (() => {
   const addListenerToDeleteTodoBtn = () => {
     todosContainer().addEventListener('click', e => {
       if (e.target.textContent === 'Delete') {
+        e.preventDefault();
         const indexOfProject = e.target.dataset.indexProject;
         const indexOfTodo = e.target.dataset.indexTodo;
         logic.deleteTodo(indexOfProject, indexOfTodo);
+        showTodoList(indexOfProject);
       }
     });
   };
