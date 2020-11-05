@@ -17,6 +17,8 @@ const getTodoProject = () => document.querySelector('#projects-select').selected
 const getTodoIscomplete = () => document.getElementById('iscomplete').selectedIndex;
 const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project-show-todos');
+const getBtnEditProjects = () => document.getElementsByClassName('project-edit');
+const getBtnDeleteProjects = () => document.getElementsByClassName('project-delete');
 const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
 const getEditTodoTitle = () => document.getElementById('edit-todo-title').value;
@@ -77,6 +79,7 @@ const queries = (() => {
     });
     getTodoDiv().appendChild(container);
     editTodo();
+    todosContainer().scrollIntoView();
   };
 
   const updateTodo = (e) => {
@@ -120,6 +123,7 @@ const queries = (() => {
     addEventToBtnAddProjects();
     giveBtnProjectsListeners();
     editTodo();
+    addListenerToEditProjects();
   };
 
   const createOrEditProject = (e) => {
@@ -131,6 +135,7 @@ const queries = (() => {
     removeProjectForm();
     gatherProjects();
     giveBtnProjectsListeners();
+    getProjectsDiv().scrollIntoView();
   };
 
   const addCloseProjectForm = () => {
@@ -138,8 +143,12 @@ const queries = (() => {
     getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
   };
 
-  const displayFormProject = (project = false) => {
-    const html = `
+  const displayFormProject = (e, project = false) => {
+    console.log('Fired displayFormProject');
+    e.preventDefault();
+    if (e.target.classList.contains('add-btn-project') || e.target.classList.contains('project-edit')) {
+      console.log('True event target: ', e.target.classList);
+      const html = `
       <div id="form-project" class="form-todo">
         <div id="x-project-form"><span class="close-x">x</span></div>
         <h5>${project ? `Edit title project: ${projectsList[project].title}` : 'Add a New Project'}</h5>
@@ -151,22 +160,26 @@ const queries = (() => {
       </div>
     `;
 
-    body.innerHTML += html;
-    addCloseProjectForm();
+      body.innerHTML += html;
+      addCloseProjectForm();
+      window.scrollTo(0, 0);
+    }
   };
 
   const giveBtnProjectsListeners = () => {
     [...getBtnProjects()].forEach((project, i) => {
-      console.log(project);
       project.onclick = () => { showTodoList(i); };
     });
   };
 
   const addEventToBtnAddProjects = () => {
     getAddProjectBtn().addEventListener('click', (e) => {
-      e.preventDefault();
-      displayFormProject();
+      displayFormProject(e);
     });
+  };
+
+  const addListenerToEditProjects = () => {
+    getProjectsDiv().addEventListener('click', (e) => { displayFormProject(e, e.target.dataset.index); });
   };
 
   const addTodoToArr = () => {
@@ -308,6 +321,7 @@ const queries = (() => {
     editTodo,
     addTodoToArr,
     addEventToBtnAddProjects,
+    addListenerToEditProjects,
   };
 
 })();

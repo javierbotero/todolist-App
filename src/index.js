@@ -17,3 +17,4 @@ queries.showTodoList(0);
 queries.giveBtnProjectsListeners();
 queries.addTodoToArr();
 queries.addEventToBtnAddProjects();
+queries.addListenerToEditProjects();
