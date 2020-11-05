@@ -83,6 +83,7 @@ const queries = (() => {
     getTodoDiv().appendChild(container);
     editTodo();
     addListenerToDeleteTodoBtn();
+    finishTodo();
     todosContainer().scrollIntoView();
   };
 
@@ -112,7 +113,6 @@ const queries = (() => {
   };
 
   const todoObject = () => {
-    console.log(typeof getTodoIscomplete());
     const title = getTodoTitle();
     const description = getTodoDescription();
     const selectProject = getTodoProject();
@@ -338,7 +338,19 @@ const queries = (() => {
         e.preventDefault();
         const parent = e.target;
         displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo);
-        e.preventDefault();
+      }
+    });
+  };
+
+  const finishTodo = () => {
+    getBtnSwitcherFinishedTodo().addEventListener('click', e => {
+      e.preventDefault();
+      if (e.target.classList.contains('finished-todo')) {
+        console.log(typeof e.target.textContent);
+        const indexOfProject = e.target.dataset.indexProject;
+        const indexOfTodo = e.target.dataset.indexTodo;
+        logic.switchTodoCompleted(indexOfProject, indexOfTodo);
+        showTodoList(indexOfProject);
       }
     });
   };

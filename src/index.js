@@ -19,4 +19,3 @@ queries.addTodoToArr();
 queries.addEventToBtnAddProjects();
 queries.addListenerToEditProjects();
 queries.addListenerToDeleteBtnsProject();
-queries.addListenerToDeleteTodoBtn();
