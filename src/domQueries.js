@@ -82,6 +82,7 @@ const queries = (() => {
     });
     getTodoDiv().appendChild(container);
     editTodo();
+    addListenerToDeleteTodoBtn();
     todosContainer().scrollIntoView();
   };
 
@@ -175,7 +176,6 @@ const queries = (() => {
         logic.deleteProject(e.target.dataset.index);
         logic.createFirstProject();
         gatherProjects();
-        addListenerToDeleteTodoBtn();
         showTodoList(0);
       }
     }
@@ -340,7 +340,7 @@ const queries = (() => {
         displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo);
         e.preventDefault();
       }
-    }, false);
+    });
   };
 
   return {
