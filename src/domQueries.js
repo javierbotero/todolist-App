@@ -17,8 +17,8 @@ const getTodoProject = () => document.querySelector('#projects-select').selected
 const getTodoIscomplete = () => document.getElementById('iscomplete').selectedIndex;
 const todoContainer = () => document.createElement('div');
 const getBtnProjects = () => document.getElementsByClassName('project-show-todos');
-const getBtnEditProjects = () => document.getElementsByClassName('project-edit');
-const getBtnDeleteProjects = () => document.getElementsByClassName('project-delete');
+// const getBtnEditProjects = () => document.getElementsByClassName('project-edit');
+// const getBtnDeleteProjects = () => document.getElementsByClassName('project-delete');
 const todosContainer = () => document.querySelector('.todo-container');
 const getTodoDiv = () => document.getElementById('todos');
 const getEditTodoTitle = () => document.getElementById('edit-todo-title').value;
@@ -144,10 +144,8 @@ const queries = (() => {
   };
 
   const displayFormProject = (e, project = false) => {
-    console.log('Fired displayFormProject');
     e.preventDefault();
     if (e.target.classList.contains('add-btn-project') || e.target.classList.contains('project-edit')) {
-      console.log('True event target: ', e.target.classList);
       const html = `
       <div id="form-project" class="form-todo">
         <div id="x-project-form"><span class="close-x">x</span></div>
@@ -166,6 +164,17 @@ const queries = (() => {
     }
   };
 
+  const deleteProject = (e) => {
+    if (e.target.classList.contains('project-delete')) {
+      if (confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?')) {
+        logic.deleteProject(e.target.dataset.index);
+        logic.createFirstProject();
+        gatherProjects();
+        showTodoList(0);
+      }
+    }
+  };
+
   const giveBtnProjectsListeners = () => {
     [...getBtnProjects()].forEach((project, i) => {
       project.onclick = () => { showTodoList(i); };
@@ -180,6 +189,10 @@ const queries = (() => {
 
   const addListenerToEditProjects = () => {
     getProjectsDiv().addEventListener('click', (e) => { displayFormProject(e, e.target.dataset.index); });
+  };
+
+  const addListenerToDeleteBtnsProject = () => {
+    getProjectsDiv().addEventListener('click', (e) => { deleteProject(e); });
   };
 
   const addTodoToArr = () => {
@@ -322,6 +335,7 @@ const queries = (() => {
     addTodoToArr,
     addEventToBtnAddProjects,
     addListenerToEditProjects,
+    addListenerToDeleteBtnsProject,
   };
 
 })();
