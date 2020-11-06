@@ -1,3 +1,5 @@
+// import format from 'date-fns';
+import moment from 'moment';
 import { logic } from './logic';
 import { projectsList } from './todos';
 
@@ -28,8 +30,21 @@ const getSubmitBtnProjectForm = () => document.getElementById('project-submit');
 const getFormProject = () => document.getElementById('form-project');
 const getTitleFormProject = () => document.getElementById('title-project').value;
 const getTodoDueDate = () => document.getElementById('todo-date').value;
-const getTodoCheckList = () => document.getElementById('todo-check-list').value;
-const getAddANewTaskDiv = () => document.getElementById('add-new-task');
+const getEditedDate = () => document.getElementById('edited-date').value;
+const getPriority = () => {
+  const radio1 = document.querySelector('#inlineRadio1');
+  const radio2 = document.querySelector('#inlineRadio2');
+  const radio3 = document.querySelector('#inlineRadio3');
+  let result;
+  if (radio1.checked) {
+    result = radio1.value;
+  } else if (radio2.checked) {
+    result = radio2.value;
+  } else {
+    result = radio3.value;
+  }
+  return result;
+};
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -80,9 +95,8 @@ const queries = (() => {
             <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info finished-todo">${todo.isComplete ? 'Completed' : 'Not Completed'}</a>
             <a href="#" data-index-project="${index}" data-index-todo="${i}" class="btn btn-info delete-todo">Delete</a>
           </div>
-          <div class="card-footer text-muted">
-            Date made
-          </div>
+          <div class="card-footer text-muted sub-footer">${todo.priority}</div>
+          <div class="card-footer text-muted">${moment(todo.dueDate).format('D/MM/YYYY, H:mm')}</div>
         </div>
     `;
     });
@@ -98,8 +112,9 @@ const queries = (() => {
     const title = getEditTodoTitle();
     const description = getEditTodoDescription();
     const isComplete = getEditTodoIsComplete();
-    console.log(typeof isComplete);
     const project = getEditProjectSelect();
+    const dateTime = getEditedDate();
+    const priority = getPriority();
     logic.editTodo(
       parseInt(e.target.dataset.indexProject, 10),
       e.target.dataset.indexTodo,
@@ -107,6 +122,8 @@ const queries = (() => {
       description,
       project,
       isComplete,
+      dateTime,
+      priority,
     );
     showTodoList(project);
     removeEditTodoForm();
@@ -124,8 +141,8 @@ const queries = (() => {
     const selectProject = getTodoProject();
     const iscomplete = getTodoIscomplete();
     const dueDate = getTodoDueDate();
-    const checkList = getTodoCheckList();
-    logic.createTodo(title, description, selectProject, iscomplete, dueDate, checkList);
+    const priority = getPriority();
+    logic.createTodo(title, description, selectProject, iscomplete, dueDate, priority);
     showTodoList(selectProject);
     todosContainer().scrollIntoView();
   };
@@ -196,11 +213,11 @@ const queries = (() => {
   };
 
   const addListenerToEditProjects = () => {
-    getProjectsDiv().addEventListener('click', (e) => { displayFormProject(e, e.target.dataset.index); });
+    getProjectsDiv().addEventListener('click', e => displayFormProject(e, e.target.dataset.index));
   };
 
   const addListenerToDeleteBtnsProject = () => {
-    getProjectsDiv().addEventListener('click', (e) => { deleteProject(e); });
+    getProjectsDiv().addEventListener('click', e => deleteProject(e));
   };
 
   const addListenerToDeleteTodoBtn = () => {
@@ -278,45 +295,15 @@ const queries = (() => {
     return html;
   };
 
-  const prioritySelect = (todo = false) => {
-    let html = '';
+  // const prioritySelect = (todo = false) => {
+  //   let html = '';
 
-    [1, 2, 3].forEach((n) => {
-      html += `<option value="${n}" ${todo ? 'selected' : ''}>${n}</option>`;
-    });
+  //   [1, 2, 3].forEach((n) => {
+  //     html += `<option value="${n}" ${todo ? 'selected' : ''}>${n}</option>`;
+  //   });
 
-    return html;
-  };
-
-  const displayNewTask = () => {
-    return `
-      <div class="form-todo" id="form-add-task>
-        <div id="x"><span class="close-x">x</span></div>
-        <form>
-          <label for="description-task">Description</label>
-          <input type="text" id="description-task">
-          <label for="completed-task">Completed ?</label>
-          <select id="completed-task">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </form>
-      </div>
-    `;
-  };
-
-  const addListenerToAddNewTaskDiv = () => {
-    getAddANewTaskDiv().addEventListener('click', displayNewTask);
-  };
-
-  const showTasks = (todo) => {
-    let html = '';
-
-    todo.checkList.forEach((task) => {
-      html += `<li>${task.description}<span>${task.complete}<span></li>`;
-    });
-    return html;
-  };
+  //   return html;
+  // };
 
   const displayFormEditTodo = (indexProject, indexTodo) => {
     const todo = projectsList[indexProject].todos[indexTodo];
@@ -338,20 +325,22 @@ const queries = (() => {
             <option value="true">Completed</option>
           </select><br>
           <label for="todo-date">Due Date</label><br>
-          <input type="datetime-local" id="todo-date"><br>
-          <div>
-            <h5>Tasks:</h5>
-            <ul id="todo-check-list">
-              ${showTasks()}
-            <ul>
-            <ul id="todo-check-list-new">
-            <ul>
-            <div id="add-new-task">Add a new Task</div>
+          <input type="datetime-local" id="edited-date"><br>
+          <div class="priority-section">
+            <h6 for="priority">Priority<h6>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+              <label class="form-check-label" for="inlineRadio1">Low</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+              <label class="form-check-label" for="inlineRadio2">Medium</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+              <label class="form-check-label" for="inlineRadio3">High</label>
+            </div>
           </div>
-          <label for="priority">Priority<label><br>
-          <select id="priority">
-            ${prioritySelect(todo)}
-          </select><br>
           <input class="submit-todo" id="submit-edit" type="submit" value="Submit" data-index-project="${indexProject}" data-index-todo="${indexTodo}">
         </form>
       </div>
@@ -381,16 +370,21 @@ const queries = (() => {
           <select><br><br>
           <label for="todo-date">Due Date</label><br>
           <input type="datetime-local" id="todo-date"><br>
-          <div>
-            <h5>Tasks:</h5>
-            <ul id="todo-check-list-new">
-            <ul>
-            <div id="add-new-task">Add a new Task</div>
+          <div class="priority-section">
+          <h6 class="priority-head">Priority</h6>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Low">
+              <label class="form-check-label" for="inlineRadio1">Low</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Medium">
+              <label class="form-check-label" for="inlineRadio2">Medium</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="High">
+              <label class="form-check-label" for="inlineRadio3">High</label>
+            </div>
           </div>
-          <label for="priority">Priority<label><br>
-          <select id="priority">
-            ${prioritySelect()}
-          </select><br>
           <input class="submit-todo" type="submit" value="Submit"><br>
         </form>
       </div>
@@ -415,7 +409,6 @@ const queries = (() => {
     todosContainer().addEventListener('click', e => {
       e.preventDefault();
       if (e.target.classList.contains('finished-todo')) {
-        console.log(e.target.textContent);
         const indexOfProject = e.target.dataset.indexProject;
         const indexOfTodo = e.target.dataset.indexTodo;
         logic.switchTodoCompleted(indexOfProject, indexOfTodo);

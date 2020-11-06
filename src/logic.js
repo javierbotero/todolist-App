@@ -1,11 +1,13 @@
-import { projectsList, behaviorsProject, projects, behaviorsTodo, todos } from './todos';
+import {
+  projectsList, behaviorsProject, projects, behaviorsTodo, todos,
+} from './todos';
 
 const logic = (() => {
   const addToLocalStorage = () => {
     localStorage.setItem('projects', JSON.stringify(projectsList));
   };
-  const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0, isComplete = false, dueDate = new Date(2020, 12, 31), checkList = [], priority = 3) => {
-    const todo = todos(title, description, indexProject, isComplete, dueDate, checkList, priority);
+  const createTodo = (title = 'My Title', description = 'Add some description', indexProject = 0, isComplete = false, dueDate = new Date(2020, 12, 31), priority = 'Low') => {
+    const todo = todos(title, description, indexProject, isComplete, dueDate, priority);
     projectsList[indexProject].addTodoToTodos(todo);
     addToLocalStorage();
   };
@@ -29,6 +31,15 @@ const logic = (() => {
     });
     projectsList.forEach((project) => setPropertiesToTodos(project));
   };
+  const editOrCreateProject = (title = 'New project', indexProject = false) => {
+    if (indexProject) {
+      projectsList[indexProject].title = title;
+    } else {
+      const project = projects(title);
+      addToProjectsList(project);
+    }
+    addToLocalStorage();
+  };
   const createFirstProject = () => {
     if (projectsList.length === 0) {
       editOrCreateProject();
@@ -39,24 +50,17 @@ const logic = (() => {
     todo.isComplete = !todo.isComplete;
     addToLocalStorage();
   };
-  const editOrCreateProject = (title = 'New project', indexProject = false) => {
-    if (indexProject) {
-      projectsList[indexProject].title = title;
-    } else {
-      const project = projects(title);
-      addToProjectsList(project);
-    }
-    addToLocalStorage();
-  };
-  const editTodo = (indexOfProject, indexOfTodo, title, description, indexProject, isComplete) => {
+  const editTodo = (indexOfProject, indexOfTodo, title, description, indexProject, isComplete, dueDate, priority) => {
     projectsList[indexOfProject].todos[indexOfTodo].title = title;
     projectsList[indexOfProject].todos[indexOfTodo].description = description;
     projectsList[indexOfProject].todos[indexOfTodo].setIndexProject(indexProject);
     projectsList[indexOfProject].todos[indexOfTodo].isComplete = isComplete;
+    projectsList[indexOfProject].todos[indexOfTodo].dueDate = dueDate;
+    projectsList[indexOfProject].todos[indexOfTodo].priority = priority;
     if (indexOfProject !== indexProject) {
       projectsList[indexProject].todos.push(projectsList[indexOfProject].todos[indexOfTodo]);
       projectsList[indexOfProject].todos.splice(indexOfTodo, 1);
-    };
+    }
     addToLocalStorage();
   };
   const deleteTodo = (indexOfProject, indexOfTodo) => {
