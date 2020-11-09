@@ -54,43 +54,42 @@ const queries = (() => {
     getTodoSubmit().onclick = hideFormTodo;
   };
 
+  const gatherProjects = () => {
+    let html = '<h4 class="py-5 text-center text-light w-100">My Projects</h4>';
+    let i = 0;
+    logic.projectsList.forEach((project) => {
+      html += `
+      <div class="project col-sm-5 col-md-3 card bg-light mb-3 mr-2 p-0 text-center">
+        <div class="card-header">${project.title}</div>
+        <div class="card-body">
+          <button class="project-show-todos py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Todos</button>
+          <button class="project-edit py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Edit</button>
+          <button class="project-delete py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Delete</button>
+        </div>
+      </div>
+      `;
+      i += 1;
+    });
+    getProjectsDiv().innerHTML = html;
+  };
+
   const showFormTodo = () => {
     formTodo().className = 'form-todo';
     addCloseTodo();
   };
 
-  const removeProjectForm = () => {
-    body.removeChild(getFormProject());
-    addListeners();
+  const editTodo = () => {
+    todosContainer().addEventListener('click', (e) => {
+      if (e.target.textContent === 'Edit') {
+        e.preventDefault();
+        const parent = e.target;
+        displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo); // eslint-disable-line
+      }
+    });
   };
 
-  const createOrEditProject = (e) => {
-    e.preventDefault();
-    const title = getTitleFormProject();
-    // eslint-disable-next-line max-len
-    const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
-    logic.editOrCreateProject(title, index);
-    gatherProjects();
-    removeProjectForm();
-    getProjectsDiv().scrollIntoView();
-  };
-
-  const deleteProject = (e) => {
-    if (e.target.classList.contains('project-delete')) {
-      bootbox.confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?', (result) => {
-        if (result) {
-          logic.deleteProject(e.target.dataset.index);
-          logic.createFirstProject();
-          gatherProjects();
-          showTodoList(0);
-        }
-      });
-    }
-  };
-
-  const addCloseProjectForm = () => {
-    getXProjectForm().addEventListener('click', removeProjectForm);
-    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
+  const addBtnTodoEventDisplay = () => {
+    getTodoBtn().onclick = showFormTodo;
   };
 
   const displayFormProject = (e, project = false) => {
@@ -109,21 +108,13 @@ const queries = (() => {
     `;
 
       body.innerHTML += html;
-      addCloseProjectForm();
+      addCloseProjectForm(); // eslint-disable-line
       window.scrollTo(0, 0);
     }
   };
 
-  const addBtnTodoEventDisplay = () => {
-    getTodoBtn().onclick = showFormTodo;
-  };
-
   const addListenerToEditProjects = () => {
     getProjectsDiv().addEventListener('click', e => displayFormProject(e, e.target.dataset.index));
-  };
-
-  const addListenerToDeleteBtnsProject = () => {
-    getProjectsDiv().addEventListener('click', e => deleteProject(e));
   };
 
   const showTodoList = (index) => {
@@ -150,9 +141,102 @@ const queries = (() => {
     });
     getTodoDiv().appendChild(container);
     editTodo();
-    addListenerToDeleteTodoBtn();
-    finishTodo();
+    addListenerToDeleteTodoBtn();// eslint-disable-line
+    finishTodo(); // eslint-disable-line
     todosContainer().scrollIntoView();
+  };
+
+  const deleteProject = (e) => {
+    if (e.target.classList.contains('project-delete')) {
+      bootbox.confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?', (result) => {
+        if (result) {
+          logic.deleteProject(e.target.dataset.index);
+          logic.createFirstProject();
+          gatherProjects();
+          showTodoList(0);
+        }
+      });
+    }
+  };
+
+  const addListenerToDeleteBtnsProject = () => {
+    getProjectsDiv().addEventListener('click', e => deleteProject(e));
+  };
+
+  const finishTodo = () => {
+    todosContainer().addEventListener('click', e => {
+      e.preventDefault();
+      if (e.target.classList.contains('finished-todo')) {
+        const indexOfProject = e.target.dataset.indexProject;
+        const indexOfTodo = e.target.dataset.indexTodo;
+        logic.switchTodoCompleted(indexOfProject, indexOfTodo);
+        showTodoList(indexOfProject);
+      }
+    });
+  };
+
+  const giveBtnProjectsListeners = () => {
+    [...getBtnProjects()].forEach((project, i) => {
+      project.onclick = () => { showTodoList(i); };
+    });
+  };
+
+
+  const todoObject = () => {
+    const title = getTodoTitle();
+    const description = getTodoDescription();
+    const selectProject = getTodoProject();
+    const iscomplete = getTodoIscomplete();
+    const dueDate = getTodoDueDate();
+    const priority = getPriority();
+    logic.createTodo(title, description, selectProject, iscomplete, dueDate, priority);
+    showTodoList(selectProject);
+    todosContainer().scrollIntoView();
+  };
+
+  const addTodoToArr = () => {
+    getTodoSubmit().addEventListener('click', (e) => {
+      e.preventDefault();
+      todoObject();
+    });
+  };
+
+  const addListeners = () => {
+    addTodoToArr();
+    addBtnTodoEventDisplay();
+    addEventToBtnAddProjects(); // eslint-disable-line
+    giveBtnProjectsListeners();
+    editTodo();
+    addListenerToEditProjects();
+    addListenerToDeleteTodoBtn(); // eslint-disable-line
+    addListenerToDeleteBtnsProject();
+  };
+
+  const removeProjectForm = () => {
+    body.removeChild(getFormProject());
+    addListeners();
+  };
+
+  const createOrEditProject = (e) => {
+    e.preventDefault();
+    const title = getTitleFormProject();
+    // eslint-disable-next-line max-len
+    const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
+    logic.editOrCreateProject(title, index);
+    gatherProjects();
+    removeProjectForm();
+    getProjectsDiv().scrollIntoView();
+  };
+
+  const addCloseProjectForm = () => {
+    getXProjectForm().addEventListener('click', removeProjectForm);
+    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
+  };
+
+  const addEventToBtnAddProjects = () => {
+    getAddProjectBtn().addEventListener('click', (e) => {
+      displayFormProject(e);
+    });
   };
 
   const addListenerToDeleteTodoBtn = () => {
@@ -165,17 +249,6 @@ const queries = (() => {
         showTodoList(indexOfProject);
       }
     });
-  };
-
-  const addListeners = () => {
-    addTodoToArr();
-    addBtnTodoEventDisplay();
-    addEventToBtnAddProjects();
-    giveBtnProjectsListeners();
-    editTodo();
-    addListenerToEditProjects();
-    addListenerToDeleteTodoBtn();
-    addListenerToDeleteBtnsProject();
   };
 
   const removeEditTodoForm = () => {
@@ -209,56 +282,6 @@ const queries = (() => {
   const addCloseEditTodo = () => {
     getCloseEditBtn().addEventListener('click', removeEditTodoForm);
     getTodoEditSubmit().addEventListener('click', (e) => { updateTodo(e); });
-  };
-
-  const todoObject = () => {
-    const title = getTodoTitle();
-    const description = getTodoDescription();
-    const selectProject = getTodoProject();
-    const iscomplete = getTodoIscomplete();
-    const dueDate = getTodoDueDate();
-    const priority = getPriority();
-    logic.createTodo(title, description, selectProject, iscomplete, dueDate, priority);
-    showTodoList(selectProject);
-    todosContainer().scrollIntoView();
-  };
-
-  const giveBtnProjectsListeners = () => {
-    [...getBtnProjects()].forEach((project, i) => {
-      project.onclick = () => { showTodoList(i); };
-    });
-  };
-
-  const addEventToBtnAddProjects = () => {
-    getAddProjectBtn().addEventListener('click', (e) => {
-      displayFormProject(e);
-    });
-  };
-
-  const addTodoToArr = () => {
-    getTodoSubmit().addEventListener('click', (e) => {
-      e.preventDefault();
-      todoObject();
-    });
-  };
-
-  const gatherProjects = () => {
-    let html = '<h4 class="py-5 text-center text-light w-100">My Projects</h4>';
-    let i = 0;
-    logic.projectsList.forEach((project) => {
-      html += `
-      <div class="project col-sm-5 col-md-3 card bg-light mb-3 mr-2 p-0 text-center">
-        <div class="card-header">${project.title}</div>
-        <div class="card-body">
-          <button class="project-show-todos py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Todos</button>
-          <button class="project-edit py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Edit</button>
-          <button class="project-delete py-1 px-2 rounded bg-light border border-info rounded text-info mr-2 mb-2" data-index="${i}">Delete</button>
-        </div>
-      </div>
-      `;
-      i += 1;
-    });
-    getProjectsDiv().innerHTML = html;
   };
 
   const displaySetup = () => {
@@ -297,16 +320,6 @@ const queries = (() => {
     });
     return html;
   };
-
-  // const prioritySelect = (todo = false) => {
-  //   let html = '';
-
-  //   [1, 2, 3].forEach((n) => {
-  //     html += `<option value="${n}" ${todo ? 'selected' : ''}>${n}</option>`;
-  //   });
-
-  //   return html;
-  // };
 
   const displayFormEditTodo = (indexProject, indexTodo) => {
     const todo = projectsList[indexProject].todos[indexTodo];
@@ -396,28 +409,6 @@ const queries = (() => {
     body.innerHTML += html;
     addBtnTodoEventDisplay();
     addCloseTodo();
-  };
-
-  const editTodo = () => {
-    todosContainer().addEventListener('click', (e) => {
-      if (e.target.textContent === 'Edit') {
-        e.preventDefault();
-        const parent = e.target;
-        displayFormEditTodo(parent.dataset.indexProject, parent.dataset.indexTodo);
-      }
-    });
-  };
-
-  const finishTodo = () => {
-    todosContainer().addEventListener('click', e => {
-      e.preventDefault();
-      if (e.target.classList.contains('finished-todo')) {
-        const indexOfProject = e.target.dataset.indexProject;
-        const indexOfTodo = e.target.dataset.indexTodo;
-        logic.switchTodoCompleted(indexOfProject, indexOfTodo);
-        showTodoList(indexOfProject);
-      }
-    });
   };
 
   return {
