@@ -9,7 +9,7 @@
 .form-todo {
   display: flex;
   flex-direction: column;
-  background-color: rgb(0,174,200);
+  background-color: rgb(0, 174, 200);
   color: white;
   width: 50%;
   position: absolute;
