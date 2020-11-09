@@ -45,6 +45,7 @@ const getPriority = () => {
   }
   return result;
 };
+const { location } = window;
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
@@ -154,6 +155,7 @@ const queries = (() => {
           logic.createFirstProject();
           gatherProjects();
           showTodoList(0);
+          location.reload();
         }
       });
     }
@@ -181,7 +183,6 @@ const queries = (() => {
     });
   };
 
-
   const todoObject = () => {
     const title = getTodoTitle();
     const description = getTodoDescription();
@@ -195,8 +196,7 @@ const queries = (() => {
   };
 
   const addTodoToArr = () => {
-    getTodoSubmit().addEventListener('click', (e) => {
-      e.preventDefault();
+    getTodoSubmit().addEventListener('click', () => {
       todoObject();
     });
   };
@@ -217,8 +217,7 @@ const queries = (() => {
     addListeners();
   };
 
-  const createOrEditProject = (e) => {
-    e.preventDefault();
+  const createOrEditProject = () => {
     const title = getTitleFormProject();
     // eslint-disable-next-line max-len
     const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
@@ -226,11 +225,12 @@ const queries = (() => {
     gatherProjects();
     removeProjectForm();
     getProjectsDiv().scrollIntoView();
+    location.reload();
   };
 
   const addCloseProjectForm = () => {
     getXProjectForm().addEventListener('click', removeProjectForm);
-    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
+    getSubmitBtnProjectForm().addEventListener('click', () => { createOrEditProject(); });
   };
 
   const addEventToBtnAddProjects = () => {
