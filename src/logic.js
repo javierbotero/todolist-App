@@ -50,7 +50,9 @@ const logic = (() => {
     todo.isComplete = !todo.isComplete;
     addToLocalStorage();
   };
-  const editTodo = (indexOfProject, indexOfTodo, title, description, indexProject, isComplete, dueDate, priority) => {
+  const editTodo = (
+    indexOfProject, indexOfTodo, title, description, indexProject, isComplete, dueDate, priority,
+  ) => {
     projectsList[indexOfProject].todos[indexOfTodo].title = title;
     projectsList[indexOfProject].todos[indexOfTodo].description = description;
     projectsList[indexOfProject].todos[indexOfTodo].setIndexProject(indexProject);

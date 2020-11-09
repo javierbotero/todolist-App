@@ -48,34 +48,80 @@ const getPriority = () => {
 
 const queries = (() => {
   const hideFormTodo = () => { formTodo().className = 'hide-form-todo'; };
+
+  const addCloseTodo = () => {
+    getCloseBtn().onclick = hideFormTodo;
+    getTodoSubmit().onclick = hideFormTodo;
+  };
+
   const showFormTodo = () => {
     formTodo().className = 'form-todo';
     addCloseTodo();
   };
 
-  const addListeners = () => {
-    addTodoToArr();
-    addBtnTodoEventDisplay();
-    addEventToBtnAddProjects();
-    giveBtnProjectsListeners();
-    editTodo();
-    addListenerToEditProjects();
-    addListenerToDeleteTodoBtn();
-    addListenerToDeleteBtnsProject();
+  const removeProjectForm = () => {
+    body.removeChild(getFormProject());
+    addListeners();
+  };
+
+  const createOrEditProject = (e) => {
+    e.preventDefault();
+    const title = getTitleFormProject();
+    // eslint-disable-next-line max-len
+    const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
+    logic.editOrCreateProject(title, index);
+    gatherProjects();
+    removeProjectForm();
+    getProjectsDiv().scrollIntoView();
+  };
+
+  const deleteProject = (e) => {
+    if (e.target.classList.contains('project-delete')) {
+      if (confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?')) {
+        logic.deleteProject(e.target.dataset.index);
+        logic.createFirstProject();
+        gatherProjects();
+        showTodoList(0);
+      }
+    }
+  };
+
+  const addCloseProjectForm = () => {
+    getXProjectForm().addEventListener('click', removeProjectForm);
+    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
+  };
+
+  const displayFormProject = (e, project = false) => {
+    e.preventDefault();
+    if (e.target.classList.contains('add-btn-project') || e.target.classList.contains('project-edit')) {
+      const html = `
+      <div id="form-project" class="form-todo">
+        <div id="x-project-form"><span class="close-x">x</span></div>
+        <h5>${project ? `Edit title project: ${projectsList[project].title}` : 'Add a New Project'}</h5>
+        <form>
+          <label for="title-project">Title</label>
+          <input id="title-project" type="text" ${project ? `value="${projectsList[project].title}"` : ''}><br>
+          <input type="submit" id="project-submit" ${project ? `data-index-project="${project}"` : ''} value="Submit">
+        </form>
+      </div>
+    `;
+
+      body.innerHTML += html;
+      addCloseProjectForm();
+      window.scrollTo(0, 0);
+    }
   };
 
   const addBtnTodoEventDisplay = () => {
     getTodoBtn().onclick = showFormTodo;
   };
 
-  const removeEditTodoForm = () => {
-    getformEditTodo().remove();
-    addListeners();
+  const addListenerToEditProjects = () => {
+    getProjectsDiv().addEventListener('click', e => displayFormProject(e, e.target.dataset.index));
   };
 
-  const addCloseTodo = () => {
-    getCloseBtn().onclick = hideFormTodo;
-    getTodoSubmit().onclick = hideFormTodo;
+  const addListenerToDeleteBtnsProject = () => {
+    getProjectsDiv().addEventListener('click', e => deleteProject(e));
   };
 
   const showTodoList = (index) => {
@@ -105,6 +151,34 @@ const queries = (() => {
     addListenerToDeleteTodoBtn();
     finishTodo();
     todosContainer().scrollIntoView();
+  };
+
+  const addListenerToDeleteTodoBtn = () => {
+    todosContainer().addEventListener('click', e => {
+      if (e.target.textContent === 'Delete') {
+        e.preventDefault();
+        const indexOfProject = e.target.dataset.indexProject;
+        const indexOfTodo = e.target.dataset.indexTodo;
+        logic.deleteTodo(indexOfProject, indexOfTodo);
+        showTodoList(indexOfProject);
+      }
+    });
+  };
+
+  const addListeners = () => {
+    addTodoToArr();
+    addBtnTodoEventDisplay();
+    addEventToBtnAddProjects();
+    giveBtnProjectsListeners();
+    editTodo();
+    addListenerToEditProjects();
+    addListenerToDeleteTodoBtn();
+    addListenerToDeleteBtnsProject();
+  };
+
+  const removeEditTodoForm = () => {
+    getformEditTodo().remove();
+    addListeners();
   };
 
   const updateTodo = (e) => {
@@ -147,59 +221,6 @@ const queries = (() => {
     todosContainer().scrollIntoView();
   };
 
-  const removeProjectForm = () => {
-    body.removeChild(getFormProject());
-    addListeners();
-  };
-
-  const createOrEditProject = (e) => {
-    e.preventDefault();
-    const title = getTitleFormProject();
-    // eslint-disable-next-line max-len
-    const index = getSubmitBtnProjectForm().dataset.indexProject ? getSubmitBtnProjectForm().dataset.indexProject : false;
-    logic.editOrCreateProject(title, index);
-    gatherProjects();
-    removeProjectForm();
-    getProjectsDiv().scrollIntoView();
-  };
-
-  const addCloseProjectForm = () => {
-    getXProjectForm().addEventListener('click', removeProjectForm);
-    getSubmitBtnProjectForm().addEventListener('click', (e) => { createOrEditProject(e); });
-  };
-
-  const displayFormProject = (e, project = false) => {
-    e.preventDefault();
-    if (e.target.classList.contains('add-btn-project') || e.target.classList.contains('project-edit')) {
-      const html = `
-      <div id="form-project" class="form-todo">
-        <div id="x-project-form"><span class="close-x">x</span></div>
-        <h5>${project ? `Edit title project: ${projectsList[project].title}` : 'Add a New Project'}</h5>
-        <form>
-          <label for="title-project">Title</label>
-          <input id="title-project" type="text" ${project ? `value="${projectsList[project].title}"` : ''}><br>
-          <input type="submit" id="project-submit" ${project ? `data-index-project="${project}"` : ''} value="Submit">
-        </form>
-      </div>
-    `;
-
-      body.innerHTML += html;
-      addCloseProjectForm();
-      window.scrollTo(0, 0);
-    }
-  };
-
-  const deleteProject = (e) => {
-    if (e.target.classList.contains('project-delete')) {
-      if (confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?')) {
-        logic.deleteProject(e.target.dataset.index);
-        logic.createFirstProject();
-        gatherProjects();
-        showTodoList(0);
-      }
-    }
-  };
-
   const giveBtnProjectsListeners = () => {
     [...getBtnProjects()].forEach((project, i) => {
       project.onclick = () => { showTodoList(i); };
@@ -209,26 +230,6 @@ const queries = (() => {
   const addEventToBtnAddProjects = () => {
     getAddProjectBtn().addEventListener('click', (e) => {
       displayFormProject(e);
-    });
-  };
-
-  const addListenerToEditProjects = () => {
-    getProjectsDiv().addEventListener('click', e => displayFormProject(e, e.target.dataset.index));
-  };
-
-  const addListenerToDeleteBtnsProject = () => {
-    getProjectsDiv().addEventListener('click', e => deleteProject(e));
-  };
-
-  const addListenerToDeleteTodoBtn = () => {
-    todosContainer().addEventListener('click', e => {
-      if (e.target.textContent === 'Delete') {
-        e.preventDefault();
-        const indexOfProject = e.target.dataset.indexProject;
-        const indexOfTodo = e.target.dataset.indexTodo;
-        logic.deleteTodo(indexOfProject, indexOfTodo);
-        showTodoList(indexOfProject);
-      }
     });
   };
 
