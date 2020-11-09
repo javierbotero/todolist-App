@@ -92,4 +92,4 @@ const logic = (() => {
   };
 })();
 
-export { logic };
+export default logic;

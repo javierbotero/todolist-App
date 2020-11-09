@@ -1,6 +1,7 @@
-import { logic } from './logic';
-import { queries } from './domQueries';
+import logic from './logic';
+import queries from './domQueries';
 import './assets/style.css';
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 if (localStorage.projects) {

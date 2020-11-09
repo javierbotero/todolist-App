@@ -1,6 +1,6 @@
 import moment from 'moment';
 import bootbox from 'bootbox';
-import { logic } from './logic';
+import logic from './logic';
 import { projectsList } from './todos';
 
 const { body } = document;
@@ -77,13 +77,6 @@ const queries = (() => {
 
   const deleteProject = (e) => {
     if (e.target.classList.contains('project-delete')) {
-      // const answer = confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?');
-      // if (answer) {
-      //   logic.deleteProject(e.target.dataset.index);
-      //   logic.createFirstProject();
-      //   gatherProjects();
-      //   showTodoList(0);
-      // }
       bootbox.confirm('If you continue, all the todos in this project will be deleted too, do you want to continue?', (result) => {
         if (result) {
           logic.deleteProject(e.target.dataset.index);
@@ -443,4 +436,4 @@ const queries = (() => {
   };
 })();
 
-export { queries };
+export default queries;
