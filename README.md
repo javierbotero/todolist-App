@@ -45,6 +45,7 @@ in the terminal to install the dependencies.
 - Twitter: [@didy707](https://twitter.com/didy707)
 - Linkedin: [Didymus](https://www.linkedin.com/in/adewale-thomas-orotayo/)
 
+
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!
