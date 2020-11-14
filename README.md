@@ -1,13 +1,13 @@
 **README**
 
-# To-do List #
+# Todo List App #
 
 This project is about building a todo list with features such as the ability to create a project and add several todos within the project created. It has the ability to edit a todo or a project and has the ability to delete whatever project or todo that needs to be deleted. This project uses webpack to bundle up modules as there were quite a few that was used in this project. SOLID principles were also employed in delivering this project too
 
 ## Live Preview
 
 [Todo list App](https://javierbotero.github.io/todolist-App/)
-![Screenshot todo list app]()
+![Screenshot todo list app](https://github.com/javierbotero/todolist-App/blob/development/src/assets/Screenshot%20from%202020-11-13%2021-50-54.png)
 
 ## Built With
 
