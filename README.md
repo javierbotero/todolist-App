@@ -33,19 +33,17 @@ in the terminal to install the dependencies.
 
 ## Authors
 
-👤 **Adewale Orotayo**
-
-- Github: [@didymus707](https://github.com/didymus707)
-- Twitter: [@didy707](https://twitter.com/didy707)
-- Linkedin: [Didymus](https://www.linkedin.com/in/adewale-thomas-orotayo/)
-
-
 👤 **Javier Botero**
 
 - Github: [@Javierbotero](https://github.com/javierbotero)
 - Twitter: [@Javierbotero1](https://twitter.com/Javierboterodev)
 - Linkedin: [Javierbotero](https://www.linkedin.com/in/javierboterodev/)
 
+👤 **Adewale Orotayo**
+
+- Github: [@didymus707](https://github.com/didymus707)
+- Twitter: [@didy707](https://twitter.com/didy707)
+- Linkedin: [Didymus](https://www.linkedin.com/in/adewale-thomas-orotayo/)
 
 ## 🤝 Contributing
 
